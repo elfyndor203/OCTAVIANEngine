@@ -63,6 +63,8 @@ add_library(Core STATIC
         engine/registry/fields_eng.h
         engine/registry/dataTypes_eng.h
         engine/registry/dataPatterns_eng.h
+        internal/events/pubEvents.c
+        internal/events/pubEvents_int.h
 )
 
 target_include_directories(Core
