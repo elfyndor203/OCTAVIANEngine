@@ -1,4 +1,5 @@
 #include "Core_init.h"
+#include "Core_shutdown.h"
 #include "../system/systems_build.h"
 
 // void OCT_engine_start(char* name, unsigned int windowX, unsigned int windowY, OCT_vec4 BGColor, unsigned int virtualX, unsigned int virtualY, unsigned int maxFPS, unsigned int ECSHz, unsigned int physicsHz) {
@@ -41,7 +42,12 @@ void OCT_engine_init() {
     init_OCT_globals_build();
 
     init_OCT_registry_distributeTickets();
-    init_OCT_registry_check();
+    init_OCT_registry_summary();
 
     init_OCT_registry_initAllSystems();
+    init_OCT_registry_cleanup();
+}
+
+void OCT_engine_shutdown() {
+    // iOCT_registry_cleanup();
 }

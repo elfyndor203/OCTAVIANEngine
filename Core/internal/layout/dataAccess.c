@@ -33,11 +33,7 @@ eOCT_pool* eOCT_field_getSourcePool(OCT_global contextHandle, eOCT_fieldTicket f
     return NULL;
 }
 
-void* eOCT_field_read(eOCT_pool sourcePool, eOCT_fieldTicket fieldDetails, OCT_index entryIndex) {
-    void* fieldLoc = eOCT_pool_access(&sourcePool, entryIndex, fieldDetails.offsetFromStruct);
-    return fieldLoc;
-}
-void* eOCT_field_readOnce(eOCT_fieldTicket fieldTicket, OCT_index entryIndex, OCT_global contextHandle) {
+void* eOCT_field_read(eOCT_fieldTicket fieldTicket, OCT_index entryIndex, OCT_global contextHandle) {
     eOCT_pool* sourcePool;
     OCT_index actualIndex;
     if (fieldTicket.global && fieldTicket.globalPool) {
@@ -57,8 +53,13 @@ void* eOCT_field_readOnce(eOCT_fieldTicket fieldTicket, OCT_index entryIndex, OC
     else {
         actualIndex = entryIndex;
     }
-    return eOCT_field_read(*sourcePool, fieldTicket, actualIndex);
+        void* fieldLoc = eOCT_pool_access(sourcePool, actualIndex, fieldTicket.offsetFromStruct);
+    return fieldLoc;
 }
+// static void* iOCT_field_read(eOCT_pool sourcePool, eOCT_fieldTicket fieldDetails, OCT_index entryIndex) {
+//     void* fieldLoc = eOCT_pool_access(&sourcePool, entryIndex, fieldDetails.offsetFromStruct);
+//     return fieldLoc;
+// }
 
 eOCT_pool* eOCT_component_getPool(OCT_global contextHandle, eOCT_componentKey componentKey) {
     iOCT_entityContext* context = iOCT_entityContext_get(contextHandle.objectID);

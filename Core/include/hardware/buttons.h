@@ -103,8 +103,8 @@
     X(OCT_MOUSE_10,             "Mouse 10") \
     X(OCT_MOUSE_11,             "Mouse 11") \
     X(OCT_MOUSE_12,             "Mouse 12") \
-    X(OCT_BUTTON_SCROLL_UP,     "Scroll up") \
-    X(OCT_BUTTON_SCROLL_DOWN,   "Scroll down") \
+    X(OCT_MOUSE_SCROLL_UP,     "Scroll up") \
+    X(OCT_MOUSE_SCROLL_DOWN,   "Scroll down") \
 
 
 

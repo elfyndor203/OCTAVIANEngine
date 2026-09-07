@@ -7,9 +7,9 @@
 static void iOCT_input_printButton(OCT_BUTTON buttons);
 
 void iOCT_input_keyCallback(OCT_index eventIndex) {
-    OCT_BUTTON button = *(int*)eOCT_field_readOnce(iOCT_inputSystem_inst.keyTicket, eventIndex, OCT_GLOBAL_NULL);
-    bool pressed = *(bool*)eOCT_field_readOnce(iOCT_inputSystem_inst.keyPressTicket, eventIndex, OCT_GLOBAL_NULL);
-    bool released = *(bool*)eOCT_field_readOnce(iOCT_inputSystem_inst.keyReleaseTicket, eventIndex, OCT_GLOBAL_NULL);
+    OCT_BUTTON button = *(int*)eOCT_field_read(iOCT_inputSystem_inst.keyTicket, eventIndex, OCT_GLOBAL_NULL);
+    bool pressed = *(bool*)eOCT_field_read(iOCT_inputSystem_inst.keyPressTicket, eventIndex, OCT_GLOBAL_NULL);
+    bool released = *(bool*)eOCT_field_read(iOCT_inputSystem_inst.keyReleaseTicket, eventIndex, OCT_GLOBAL_NULL);
 
     printf("Button ");
     iOCT_input_printButton(button);
@@ -25,9 +25,9 @@ void iOCT_input_keyCallback(OCT_index eventIndex) {
 }
 
 void iOCT_input_mouseButtonCallback(OCT_index eventIndex) {
-    OCT_BUTTON button = *(int*)eOCT_field_readOnce(iOCT_inputSystem_inst.mouseButtonTicket, eventIndex, OCT_GLOBAL_NULL);
-    bool pressed = *(bool*)eOCT_field_readOnce(iOCT_inputSystem_inst.mouseButtonPressTicket, eventIndex, OCT_GLOBAL_NULL);
-    bool released = *(bool*)eOCT_field_readOnce(iOCT_inputSystem_inst.mouseButtonReleaseTicket, eventIndex, OCT_GLOBAL_NULL);
+    OCT_BUTTON button = *(int*)eOCT_field_read(iOCT_inputSystem_inst.mouseButtonTicket, eventIndex, OCT_GLOBAL_NULL);
+    bool pressed = *(bool*)eOCT_field_read(iOCT_inputSystem_inst.mouseButtonPressTicket, eventIndex, OCT_GLOBAL_NULL);
+    bool released = *(bool*)eOCT_field_read(iOCT_inputSystem_inst.mouseButtonReleaseTicket, eventIndex, OCT_GLOBAL_NULL);
 
     printf("Button ");
     iOCT_input_printButton(button);
@@ -52,15 +52,15 @@ void iOCT_input_mouseButtonCallback(OCT_index eventIndex) {
 // }
 
 void iOCT_input_mouseScrollCallback(OCT_index eventIndex) {
-    float yDelta = *(float*)eOCT_field_readOnce(iOCT_inputSystem_inst.mouseScrollTicket, eventIndex, OCT_GLOBAL_NULL);
+    float yDelta = *(float*)eOCT_field_read(iOCT_inputSystem_inst.mouseScrollTicket, eventIndex, OCT_GLOBAL_NULL);
 
     iOCT_inputSystem_inst.mouseScrollDelta += yDelta;
 
     if (yDelta > 0.0f) {
-        iOCT_button_updateState(OCT_BUTTON_SCROLL_UP, OCT_BUTTONSTATE_PRESSED);
+        iOCT_button_updateState(OCT_MOUSE_SCROLL_DOWN, OCT_BUTTONSTATE_PRESSED);
     }
     if (yDelta < 0.0f) {
-        iOCT_button_updateState(OCT_BUTTON_SCROLL_UP, OCT_BUTTONSTATE_PRESSED);
+        iOCT_button_updateState(OCT_MOUSE_SCROLL_UP, OCT_BUTTONSTATE_PRESSED);
     }
 }
 

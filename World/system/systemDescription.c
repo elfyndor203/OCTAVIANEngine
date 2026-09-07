@@ -21,18 +21,18 @@ void system_register_WORLD() {
 	eOCT_fieldDescription scaleX = {
 		.name = "scale.x",
 		.type = eOCT_DATATYPE_FLOAT32,
-		.offset = offsetof(iOCT_transform2D, rotation),
+		.offset = offsetof(iOCT_transform2D, scale) + offsetof(OCT_vec2, x),
 		.providerType = eOCT_DATAPATTERN_COMPONENT
 	};
 	eOCT_fieldDescription scaleY = {
 		.name = "scale.y",
 		.type = eOCT_DATATYPE_FLOAT32,
-		.offset = offsetof(iOCT_transform2D, rotation),
+		.offset = offsetof(iOCT_transform2D, scale) + offsetof(OCT_vec2, y),
 		.providerType = eOCT_DATAPATTERN_COMPONENT
 	};
 	eOCT_fieldDescription matrix2D = {
 		.name = "globalTransform2D",
-		.type = eOCT_DATATYPE_FLOAT32,
+		.type = eOCT_DATATYPE_MAT3,
 		.offset = offsetof(iOCT_transform2D, globalMatrix),
 		.providerType = eOCT_DATAPATTERN_COMPONENT
 	};

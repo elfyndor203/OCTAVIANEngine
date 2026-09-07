@@ -43,16 +43,16 @@ void iOCT_window_mouseButtonCallback(GLFWwindow* window, int button, int action,
     eOCT_event_broadcastGlobal(iOCT_windowSystem_inst.mouseButtonEventKey, &mouseButtonEvent);
 }
 
-// void iOCT_window_mouseMoveCallback(GLFWwindow* window, double xPos, double yPos) {
-//     iOCT_mouseMoveEvent mouseMoveEvent = {
-//         .xPos = (float)xPos,
-//         .yPos = (float)yPos
-//     };
-//
-//     iOCT_window* focusedWindow = eOCT_mappedPool_getByID(&iOCT_windowSystem_inst.windowMPool, iOCT_windowSystem_inst.focusedWindowID);
-//     focusedWindow->cursorPos = (OCT_vec2){(float)xPos, (float)yPos};
-//     eOCT_event_broadcastGlobal(iOCT_windowSystem_inst.mouseMoveEventKey, &mouseMoveEvent);
-// }
+void iOCT_window_mouseMoveCallback(GLFWwindow* window, double xPos, double yPos) {
+    iOCT_mouseMoveEvent mouseMoveEvent = {
+        .xPos = (float)xPos,
+        .yPos = (float)yPos
+    };
+
+    iOCT_window* focusedWindow = eOCT_mappedPool_getByID(&iOCT_windowSystem_inst.windowMPool, iOCT_windowSystem_inst.focusedWindowID);
+    focusedWindow->cursorPos = (OCT_vec2){(float)xPos, (float)yPos};
+    // eOCT_event_broadcastGlobal(iOCT_windowSystem_inst.mouseMoveEventKey, &mouseMoveEvent);
+}
 
 void iOCT_window_mouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
     iOCT_mouseScrollEvent mouseScrollEvent = {

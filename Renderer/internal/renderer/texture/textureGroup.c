@@ -42,7 +42,7 @@ OCT_global OCT_textureGroup_open(OCT_vec2 pixelDimensions, OCT_index maxCount) {
         .objectID = newID
     };
 
-    printf("Created new texture group\n");
+    // printf("Created new texture group\n");
 
     return newHandle;
 }
@@ -76,7 +76,7 @@ OCT_global OCT_texture_new(OCT_global textureGroup, const char* path) {
         .systemID = iOCT_renderer_inst.systemID
     };
 
-    printf("Loaded new texture\n");
+    // printf("Loaded new texture\n");
 
     return newHandle;
 }

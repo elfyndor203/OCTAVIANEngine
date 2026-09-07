@@ -135,13 +135,11 @@ static OCT_local iOCT_entityContext_initRootEntity(iOCT_entityContext* context) 
 }
 
 static void iOCT_entityContext_initSystems(OCT_global contextHandle) {
-	eOCT_pool systemPool = iOCT_registry_inst.systems;
+	eOCT_pool initFxPool = iOCT_registry_inst.contextInitFxs;
 
-	for (OCT_index systemCtr = 0; systemCtr < systemPool.count; systemCtr++) {
-		eOCT_systemDescription system = *(eOCT_systemDescription*)eOCT_pool_access(&systemPool, systemCtr, 0);
-		if (system.contextInitFx) {
-			system.contextInitFx(contextHandle);
-		}
+	for (OCT_index initFxCtr = 0; initFxCtr < initFxPool.count; initFxCtr++) {
+		eOCT_contextInitFx initFx = *(eOCT_contextInitFx*)eOCT_pool_access(&initFxPool, initFxCtr, 0);
+		initFx(contextHandle);
 	}
 }
 

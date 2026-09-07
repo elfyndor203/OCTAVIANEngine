@@ -32,6 +32,8 @@ void iOCT_memoryManager_logFree(OCT_index allocationRefIndex) {
 void OCT_memory_check() {
     bool unfreed = false;
 
+    OCT_index freedCtr = 0;
+    OCT_index unfreedCtr = 0;
     for (OCT_index refCtr = 0; refCtr < iOCT_memoryManager_inst.allocationRefs.count; refCtr++) {
         iOCT_allocationRef ref = *(iOCT_allocationRef*)eOCT_pool_access(&iOCT_memoryManager_inst.allocationRefs, refCtr, 0);
         if (ref.type == iOCT_ALLOCATION_POOL) {
@@ -49,13 +51,17 @@ void OCT_memory_check() {
         printf("  Freed: ");
         if (ref.freed) {
             printf("Yes\n");
+            freedCtr++;
         } else {
             printf("No\n");
+            unfreedCtr++;
             unfreed = true;
         }
     }
 
-    printf("Total: %zu\n", iOCT_memoryManager_inst.allocationRefs.count);
+    printf("Total pools and maps: %zu\n", iOCT_memoryManager_inst.allocationRefs.count);
+    printf("Freed: %zu\n", freedCtr);
+    printf("Unfreed: %zu\n", unfreedCtr);
     if (unfreed) {
         printf("Unfreed allocations exist\n");
     }

@@ -16,6 +16,10 @@
 #include "scheduler/scheduler_int.h"
 #include "globals/globals_int.h"
 
+#define GROUP_UNSET 0
+#define GROUP_FAILED (-1)
+#define GROUP_SUCCESS 1
+
 static bool iOCT_registry_findField(const char* fieldName, eOCT_fieldDescription* fieldOut);
 static void iOCT_registry_registerComponent(eOCT_componentDescription* componentDesc);
 static void iOCT_registry_registerEvent(eOCT_eventDescription* eventDesc);
@@ -25,13 +29,14 @@ static void iOCT_registry_registerField(eOCT_fieldDescription* field, OCT_index 
 static OCT_index iOCT_registry_registerFields(eOCT_pool providedFields, OCT_ID systemID, OCT_index providerIndex, bool global);
 static eOCT_pool* iOCT_registry_findGlobalPool(eOCT_fieldDescription field);
 static void iOCT_registry_distributeFields();
-static void iOCT_registry_buildGlobalTickets();
+static void iOCT_registry_checkGroups();
+static void iOCT_registry_buildGlobalKeys();
 
 iOCT_registry iOCT_registry_inst = { 0 }; 
 
 #pragma region init
 void init_OCT_registry_init() {
-	iOCT_registry_inst.systems = eOCT_pool_open(OCT_ID_REGISTRY, eOCT_POOL_CAPACITY_DEFAULT, sizeof(eOCT_systemDescription));
+	iOCT_registry_inst.systems_free = eOCT_pool_open(OCT_ID_REGISTRY, eOCT_POOL_CAPACITY_DEFAULT, sizeof(eOCT_systemDescription));
 	iOCT_registry_inst.fields = eOCT_pool_open(OCT_ID_REGISTRY, eOCT_POOL_CAPACITY_DEFAULT, sizeof(eOCT_fieldDescription));
 
 	iOCT_registry_inst.components = eOCT_pool_open(OCT_ID_REGISTRY, eOCT_POOL_CAPACITY_DEFAULT, sizeof(eOCT_componentDescription));
@@ -41,20 +46,23 @@ void init_OCT_registry_init() {
 	iOCT_registry_inst.localEvents = eOCT_pool_open(OCT_ID_REGISTRY, eOCT_POOL_CAPACITY_DEFAULT, sizeof(eOCT_eventDescription));
 	iOCT_registry_inst.globalSingles = eOCT_pool_open(OCT_ID_REGISTRY, eOCT_POOL_CAPACITY_DEFAULT, sizeof(eOCT_singleDescription));
 	iOCT_registry_inst.localSingles = eOCT_pool_open(OCT_ID_REGISTRY, eOCT_POOL_CAPACITY_DEFAULT, sizeof(eOCT_singleDescription));
+	iOCT_registry_inst.contextInitFxs = eOCT_pool_open(OCT_ID_REGISTRY, eOCT_POOL_CAPACITY_DEFAULT, sizeof(eOCT_contextInitFx));
+	iOCT_registry_inst.fieldGroups_free = eOCT_pool_open(OCT_ID_REGISTRY, eOCT_POOL_CAPACITY_DEFAULT, sizeof(eOCT_fieldRequest));
 	iOCT_registry_inst.success = true;
 
 	printf("| Registry initialized\n");
 }
 void init_OCT_registry_distributeTickets() {
 	iOCT_registry_distributeFields();
-	iOCT_registry_buildGlobalTickets();
+	iOCT_registry_checkGroups();
+	iOCT_registry_buildGlobalKeys();
 }
 void init_OCT_registry_initAllSystems() {
 	printf("INIT ALL SYSTEMS\n");
 	eOCT_systemDescription system;
 	eOCT_systemInitFx initFx;
-	for (OCT_index systemCtr = 0; systemCtr < iOCT_registry_inst.systems.count; systemCtr++) {
-		system = *(eOCT_systemDescription*)eOCT_pool_access(&iOCT_registry_inst.systems, systemCtr, 0);
+	for (OCT_index systemCtr = 0; systemCtr < iOCT_registry_inst.systems_free.count; systemCtr++) {
+		system = *(eOCT_systemDescription*)eOCT_pool_access(&iOCT_registry_inst.systems_free, systemCtr, 0);
 		initFx = system.systemInitFx;
 		if (initFx) {
 			printf("Init system %s with INIT fx %p\n", system.name, initFx);
@@ -65,8 +73,8 @@ void init_OCT_registry_initAllSystems() {
 		}
 	}
 }
-void init_OCT_registry_check() {
-	eOCT_pool systemPool = iOCT_registry_inst.systems;
+void init_OCT_registry_summary() {
+	eOCT_pool systemPool = iOCT_registry_inst.systems_free;
 	eOCT_systemDescription* systemArray = (eOCT_systemDescription*)systemPool.array;
 	eOCT_systemDescription system;
 	int systemCtr = 0;
@@ -182,6 +190,19 @@ void init_OCT_registry_check() {
 			printf(" | %s\n", request.name);
 		}
 	}
+
+	printf("\nRequest grouping status:\n");
+	for (OCT_index groupCtr = 0; groupCtr < iOCT_registry_inst.fieldGroups_free.count; groupCtr++) {
+		eOCT_fieldRequest* request = eOCT_pool_access(&iOCT_registry_inst.fieldGroups_free, groupCtr, 0);
+		if (request->groupStatus_reg == GROUP_SUCCESS) {
+			printf("Success | ");
+			printf("Group: %s | ", request->groupName_opt);
+		} else {
+			printf("Failed: ");
+		}
+		printf("Field: %s\n", request->name);
+	}
+
 	printf("\nStatus: ");
 	if (iOCT_registry_inst.success) {
 		printf("Success\n");
@@ -193,13 +214,51 @@ void init_OCT_registry_check() {
 	printf("-----------------------\n\n");
 
 }
+
+void init_OCT_registry_cleanup() {
+	eOCT_pool* systemPool = &iOCT_registry_inst.systems_free;
+	for (OCT_index systemCtr = 0; systemCtr < systemPool->count; systemCtr++) {
+		eOCT_systemDescription* system = eOCT_pool_access(systemPool, systemCtr, 0);
+		eOCT_pool* componentsPool = &system->providedComponents;
+		eOCT_pool* dataPoolsPool = &system->providedDataPools;
+		eOCT_pool* eventsPool = &system->providedEvents;
+		eOCT_pool* singlesPool = &system->providedSingles;
+		eOCT_pool* requestsPool = &system->requestedFields;
+
+		eOCT_pool* providedFieldsPool;
+		for (OCT_index componentCtr = 0; componentCtr < componentsPool->count; componentCtr++) {
+			eOCT_componentDescription* component = eOCT_pool_access(componentsPool, componentCtr, 0);
+			providedFieldsPool = &component->providedFields;
+			eOCT_pool_free(providedFieldsPool);
+		}
+		for (OCT_index dataPoolCtr = 0; dataPoolCtr < dataPoolsPool->count; dataPoolCtr++) {
+			eOCT_dataPoolDescription* dataPool = eOCT_pool_access(dataPoolsPool, dataPoolCtr, 0);
+			providedFieldsPool = &dataPool->providedFields;
+			eOCT_pool_free(providedFieldsPool);
+		}
+		for (OCT_index eventsCtr = 0; eventsCtr < eventsPool->count; eventsCtr++) {
+			eOCT_eventDescription* event = eOCT_pool_access(eventsPool, eventsCtr, 0);
+			providedFieldsPool = &event->providedFields;
+			eOCT_pool_free(providedFieldsPool);
+		}
+		// singles and fieldRequests don't contain pools
+
+		eOCT_pool_free(componentsPool);
+		eOCT_pool_free(dataPoolsPool);
+		eOCT_pool_free(eventsPool);
+		eOCT_pool_free(singlesPool);
+		eOCT_pool_free(requestsPool);
+	}
+	eOCT_pool_free(systemPool);
+	eOCT_pool_free(&iOCT_registry_inst.fieldGroups_free);
+}
 #pragma endregion
 
 OCT_ID eOCT_registry_registerSystem(eOCT_systemDescription systemDescription) {
-	OCT_ID systemID = iOCT_registry_inst.systems.count + OCT_ID_SYSTEM_START;
+	OCT_ID systemID = iOCT_registry_inst.systems_free.count + OCT_ID_SYSTEM_START;
 
 	systemDescription.systemID_reg = systemID;
-	eOCT_pool_addEntryNew(&iOCT_registry_inst.systems, &systemDescription, NULL);
+	eOCT_pool_addEntryNew(&iOCT_registry_inst.systems_free, &systemDescription, NULL);
 
 	// eOCT_systemDescription** destination = (eOCT_systemDescription**)eOCT_pool_addEntryOld(&iOCT_registry_inst.systems, NULL);	// addEntry after so the ID starts at 3 instead of 3 + 1
 	// *destination = systemDescription;
@@ -272,6 +331,11 @@ OCT_ID eOCT_registry_registerSystem(eOCT_systemDescription systemDescription) {
 			iOCT_registry_registerSingle(single);
 			iOCT_registry_registerField(&single->providedField, 0, systemID, single->singleTypeIndex_reg, single->global);
 		}
+	}
+
+	eOCT_contextInitFx contextInitFx = systemDescription.contextInitFx;
+	if (contextInitFx) {
+		eOCT_pool_addEntryNew(&iOCT_registry_inst.contextInitFxs, &contextInitFx, NULL);
 	}
 	printf("--------------------------------\n\n");
 
@@ -632,19 +696,18 @@ static void iOCT_registry_registerField(eOCT_fieldDescription* field, OCT_index 
 	}
 }
 
-static bool iOCT_registry_validateComponent(eOCT_componentDescription component) {
+// static bool iOCT_registry_validateComponent(eOCT_componentDescription component) {
 // 	if (
 // 		!component.keyCacheLocation ||
 // 		!component.stride ||
 // 		!component.entityHandleValueOffset ||
-// 		// (component.sort && component.sortValueOffset > ))
-}
+// 		(component.sort && component.sortValueOffset > ))
+// }
 // fills in global pools for global events
-static void iOCT_registry_buildGlobalTickets() {
-	eOCT_pool systemPool = iOCT_registry_inst.systems;
+static void iOCT_registry_buildGlobalKeys() {
+	eOCT_pool systemPool = iOCT_registry_inst.systems_free;
 	eOCT_systemDescription* systemArray = (eOCT_systemDescription*)systemPool.array;
 
-	// events
 	for (int systemCtr = 0; systemCtr < systemPool.count; systemCtr++) {
 		eOCT_systemDescription system = systemArray[systemCtr];
 		eOCT_pool* eventPool = &system.providedEvents;
@@ -679,7 +742,7 @@ static void iOCT_registry_buildGlobalTickets() {
 	}
 }
 static void iOCT_registry_distributeFields() {
-	eOCT_pool systemPool = iOCT_registry_inst.systems;
+	eOCT_pool systemPool = iOCT_registry_inst.systems_free;
 	eOCT_systemDescription* systemArray = (eOCT_systemDescription*)systemPool.array;
 
 	for (int systemCtr = 0; systemCtr < systemPool.count; systemCtr++) {
@@ -710,7 +773,9 @@ static void iOCT_registry_distributeFields() {
 				request->global_reg = match.global_reg;
 				request->fieldOffset_reg = match.offset;
 				request->providerIndex_reg = match.providerIndex_reg;
-				//printf("Fulfilled field '%s' for system '%s'\n", request->name, system->name);
+				if (request->groupName_opt) {
+					eOCT_pool_addEntryNew(&iOCT_registry_inst.fieldGroups_free, request, NULL);
+				}
 			}
 			else {
 				//printf("Failed to find existing field '%s'\n", request->name);
@@ -722,6 +787,47 @@ static void iOCT_registry_distributeFields() {
 		}
 	}
 }
+
+static void iOCT_registry_checkGroups() {
+	eOCT_pool* grouped = &iOCT_registry_inst.fieldGroups_free;
+
+	for (OCT_index requestCtr = 0; requestCtr < grouped->count; requestCtr++) {
+		eOCT_fieldRequest* request = eOCT_pool_access(grouped, requestCtr, 0);
+		if (request->groupStatus_reg != GROUP_UNSET) {
+			continue;
+		}
+		eOCT_dataPattern sourceType = request->providerType;
+		OCT_index sourceIndex = request->providerIndex_reg;
+
+		// actually check every group member
+		int groupStatus = GROUP_SUCCESS;
+		for (OCT_index searchCtr = requestCtr; searchCtr < grouped->count; searchCtr++) {
+			eOCT_fieldRequest* groupMember = eOCT_pool_access(grouped, searchCtr, 0);
+			if (groupMember->groupStatus_reg ||
+				(strcmp(request->groupName_opt, groupMember->groupName_opt) != 0)) {
+				// printf("%s %s are different groups or already grouped\n", request->groupName_opt, groupMember.groupName_opt);
+				continue;
+			}
+			if (sourceType != groupMember->providerType || sourceIndex != groupMember->providerIndex_reg) {
+				groupStatus = GROUP_FAILED;
+			}
+		}
+
+		// mark all as grouped if success
+		if (groupStatus == GROUP_FAILED) {
+			iOCT_registry_inst.success = false;
+		}
+		for (OCT_index searchCtr = 0; searchCtr < grouped->count; searchCtr++) {
+			eOCT_fieldRequest* groupMember = eOCT_pool_access(grouped, searchCtr, 0);
+			if (strcmp(request->groupName_opt, groupMember->groupName_opt) != 0) {
+				continue;
+			}
+			groupMember->groupStatus_reg = groupStatus;
+		}
+		request->groupStatus_reg = groupStatus;
+	}
+}
+
 static eOCT_pool* iOCT_registry_findGlobalPool(eOCT_fieldDescription field) {
 	if (!field.global_reg) {
 		return NULL;

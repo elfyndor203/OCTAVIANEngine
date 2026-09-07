@@ -17,7 +17,7 @@ void system_init_INPUT() {
 }
 
 void eOCT_INPUT_update() {
-    double deltaTime = *(double*)eOCT_field_readOnce(iOCT_inputSystem_inst.deltaTimeTicket, OCT_INDEX_NULL, OCT_GLOBAL_NULL);
+    double deltaTime = *(double*)eOCT_field_read(iOCT_inputSystem_inst.deltaTimeTicket, OCT_INDEX_NULL, OCT_GLOBAL_NULL);
 
     for (OCT_index buttonCtr = 0; buttonCtr < OCT_BUTTONS_TOTAL; buttonCtr++) {
         iOCT_buttonState* button = eOCT_pool_access(&iOCT_inputSystem_inst.buttonStates, buttonCtr, 0);

@@ -12,6 +12,5 @@ void init_OCT_scheduler_init();
 void init_OCT_globals_init();
 void init_OCT_globals_build();
 void init_OCT_registry_initAllSystems();
-void init_OCT_registry_check();
-
-void OCT_engine_tick(); //__NOTE__ bad spot, move to another file 
+void init_OCT_registry_summary();
+void init_OCT_registry_cleanup();

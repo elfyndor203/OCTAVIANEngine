@@ -25,7 +25,7 @@ OCT_global OCT_window_open(const char* name, unsigned int sizeX, unsigned int si
 
     glfwSetKeyCallback(windowPtr, iOCT_window_keyCallback);
     glfwSetMouseButtonCallback(windowPtr, iOCT_window_mouseButtonCallback);
-    // glfwSetCursorPosCallback(windowPtr, iOCT_window_mouseMoveCallback);
+    glfwSetCursorPosCallback(windowPtr, iOCT_window_mouseMoveCallback);
     glfwSetScrollCallback(windowPtr, iOCT_window_mouseScrollCallback);
     glfwSetWindowFocusCallback(windowPtr, iOCT_window_focusCallback);
     glfwSetWindowSizeCallback(windowPtr, iOCT_window_sizeCallback);

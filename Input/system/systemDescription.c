@@ -24,28 +24,31 @@ void system_register_INPUT() {
         .type = eOCT_DATATYPE_BOOL,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.keyReleaseTicket,
-        .providerType = eOCT_DATAPATTERN_EVENT
+        .providerType = eOCT_DATAPATTERN_EVENT,
     };
     eOCT_fieldRequest mouseButton = {
         .name = "glfwMouseButton",
         .type = eOCT_DATATYPE_INT64,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.mouseButtonTicket,
-        .providerType = eOCT_DATAPATTERN_EVENT
+        .providerType = eOCT_DATAPATTERN_EVENT,
+        .groupName_opt = "mouseButtons"
     };
     eOCT_fieldRequest mouseButtonPress = {
         .name = "glfwMouseButtonPress",
         .type = eOCT_DATATYPE_BOOL,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.mouseButtonPressTicket,
-        .providerType = eOCT_DATAPATTERN_EVENT
+        .providerType = eOCT_DATAPATTERN_EVENT,
+        .groupName_opt = "mouseButtons"
     };
     eOCT_fieldRequest mouseButtonRelease = {
         .name = "glfwMouseButtonRelease",
         .type = eOCT_DATATYPE_BOOL,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.mouseButtonReleaseTicket,
-        .providerType = eOCT_DATAPATTERN_EVENT
+        .providerType = eOCT_DATAPATTERN_EVENT,
+        .groupName_opt = "mouseButtons"
     };
     // eOCT_fieldRequest mouseMoveX = {
     //     .name = "glfwMouseXPos",
