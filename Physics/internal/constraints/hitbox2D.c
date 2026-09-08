@@ -41,8 +41,8 @@ bool iOCT_hitbox2D_solve(iOCT_hitbox2D hitboxA, iOCT_hitbox2D hitboxB) {
     OCT_vec2* posB = (OCT_vec2*)eOCT_entity_getFieldOnce(hitboxB.entity, iOCT_physicsSystem_inst.position2DTicket);
     float* rotationA = (float*)eOCT_entity_getFieldOnce(hitboxA.entity, iOCT_physicsSystem_inst.rotationTicket);
     float* rotationB = (float*)eOCT_entity_getFieldOnce(hitboxA.entity, iOCT_physicsSystem_inst.rotationTicket);
-    OCT_mat3* transformA = (OCT_mat3*)eOCT_entity_getFieldOnce(hitboxA.entity, iOCT_physicsSystem_inst.transform2DTicket);
-    OCT_mat3* transformB = (OCT_mat3*)eOCT_entity_getFieldOnce(hitboxB.entity, iOCT_physicsSystem_inst.transform2DTicket);
+    OCT_mat3* transformA = iOCT_globalMatrix2D_get(hitboxA.entity);
+    OCT_mat3* transformB = iOCT_globalMatrix2D_get(hitboxB.entity);
 
     // Radius check
     OCT_vec2 hitboxAGlobal = OCT_vec2_add(OCT_mat3_getTranslation(*transformA), hitboxA.position);

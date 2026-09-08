@@ -11,7 +11,7 @@ struct iOCT_physicsSystem {
     eOCT_componentKey physics2DKey;
     eOCT_dataPoolKey distance2DKey;
     eOCT_dataPoolKey collider2DKey;
-    eOCT_fieldTicket transform2DTicket;
+    eOCT_fieldTicket globalMatrix2DTicket;
     eOCT_fieldTicket position2DTicket;
     eOCT_fieldTicket rotationTicket;
     eOCT_fieldTicket transformParentTicket;
@@ -27,6 +27,7 @@ struct iOCT_physicsSystem {
 
 extern iOCT_physicsSystem iOCT_physicsSystem_inst;
 
+eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(iOCT_globalMatrix2D, OCT_mat3, iOCT_physicsSystem_inst, globalMatrix2DTicket)
 void iOCT_physicsSystem_init();
 void iOCT_physicsSystem_contextSetup(OCT_global context);
 

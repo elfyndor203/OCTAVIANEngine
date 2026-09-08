@@ -9,9 +9,9 @@
         return (componentName*)eOCT_entity_getComponent(entityHandle, keyHolder.keyHolderMember); \
     }
 
-#define eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(eOCT_TYPE, fieldName, ticketHolder, ticketHolderMember)\
-    static inline eOCT_TYPE* fieldName##_get(OCT_local entityHandle) { \
-        return (eOCT_TYPE*)eOCT_entity_getFieldOnce(entityHandle, ticketHolder.ticketHolderMember) \
+#define eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(fieldName, fieldType, ticketHolder, ticketHolderMember)\
+    static inline fieldType* fieldName##_get(OCT_local entityHandle) { \
+        return (fieldType*)eOCT_entity_getFieldOnce(entityHandle, ticketHolder.ticketHolderMember); \
     }
 
 void* eOCT_entity_attachComponent(OCT_local entity, eOCT_componentKey componentKey, void* source, OCT_index* outIndex);

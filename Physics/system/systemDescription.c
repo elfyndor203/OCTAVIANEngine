@@ -52,7 +52,7 @@ void system_register_PHYSICS() {
     eOCT_fieldRequest transform2D = {
         .name = "globalTransform2D",
         .optional = false,
-        .ticketCache = &iOCT_physicsSystem_inst.transform2DTicket,
+        .ticketCache = &iOCT_physicsSystem_inst.globalMatrix2DTicket,
         .type = eOCT_TYPE_MAT3,
         .providerType = eOCT_DATAPATTERN_COMPONENT
     };
