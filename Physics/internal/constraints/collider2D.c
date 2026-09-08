@@ -11,14 +11,14 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
     b2ShapeDef newShape = b2DefaultShapeDef();
     newShape.density = density; // not scaled
 
-    OCT_mat3 globalTransform = *iOCT_globalMatrix2D_get(entity);
+    OCT_mat3 globalTransform = *iOCT_globalMatrix2D_getField(entity);
 
     // figure out the transform of the target entity, relative to the PHYSICS BODY SOURCE, instead of the root
     bool foundPhysicsSourceEntity = false;
     OCT_local potentialPhysicsSourceEntity = entity;
     OCT_local physicsSourceEntity = OCT_LOCAL_NULL;
     while (!foundPhysicsSourceEntity) {
-        OCT_local parent = *(OCT_local*)eOCT_entity_getFieldOnce(potentialPhysicsSourceEntity, iOCT_physicsSystem_inst.transformParentTicket);
+        OCT_local parent = *(OCT_local*)eOCT_entity_getField(potentialPhysicsSourceEntity, iOCT_physicsSystem_inst.transformParentTicket);
         if (eOCT_entity_isRoot(parent)) {
             foundPhysicsSourceEntity = true;
             physicsSourceEntity = potentialPhysicsSourceEntity;
@@ -26,10 +26,10 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
             potentialPhysicsSourceEntity = parent;
         }
     }
-    // OCT_mat3 physicsSourceTransform = *iOCT_globalMatrix2D_get(physicsSourceEntity);
-    OCT_mat3 physicsSourceTransform = *iOCT_globalMatrix2D_get(physicsSourceEntity);
+    // OCT_mat3 physicsSourceTransform = *iOCT_globalMatrix2D_getField(physicsSourceEntity);
+    OCT_mat3 physicsSourceTransform = *iOCT_globalMatrix2D_getField(physicsSourceEntity);
     OCT_mat3 invPhysicsSourceTransform = OCT_mat3_inv(physicsSourceTransform);
-    OCT_mat3 targetEntityTransform = *iOCT_globalMatrix2D_get(entity);
+    OCT_mat3 targetEntityTransform = *iOCT_globalMatrix2D_getField(entity);
     OCT_mat3 targetToPhysicsSourceTransform = OCT_mat3_mul(invPhysicsSourceTransform, targetEntityTransform);
     OCT_vec2 relativeOrigin = OCT_mat3_getTranslation(targetToPhysicsSourceTransform);
     float relativeRadians = OCT_mat3_getRotation(targetToPhysicsSourceTransform);

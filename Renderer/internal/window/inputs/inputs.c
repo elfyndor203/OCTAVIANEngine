@@ -26,7 +26,7 @@ OCT_vec2 iOCT_cursor_calcPosContext(OCT_global context) {
     OCT_vec2 posWindow = focusedWindow->cursorPos;
 
     OCT_local contextRoot = OCT_entityContext_getRoot(context);
-    OCT_mat3 rootTransform = *(OCT_mat3*)eOCT_entity_getFieldOnce(contextRoot, iOCT_windowSystem_inst.transform2DTicket);
+    OCT_mat3 rootTransform = *(OCT_mat3*)eOCT_entity_getField(contextRoot, iOCT_windowSystem_inst.transform2DTicket);
     OCT_mat3 invRootTransform = OCT_mat3_inv(rootTransform);
     OCT_mat3 rootRelativeMat3;
     if (eOCT_single_getLocal(iOCT_renderer_inst.screenSpaceKey, context)->boolean == false) {       // world space contexts

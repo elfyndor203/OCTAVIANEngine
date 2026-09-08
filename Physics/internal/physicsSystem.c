@@ -59,8 +59,8 @@ void eOCT_PHYSICS_update(OCT_global context) {
     for (OCT_index physCtr = 0; physCtr < physicsPool->count; physCtr++) {
         iOCT_physics2D_b2* physics = &physicsArray[physCtr];
 
-        OCT_vec2* position = (OCT_vec2*)eOCT_entity_getField(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.position2DTicket);    // __NOTE__ THESE ARE LOCAL POSITIONS, NOT GLOBAL
-        float* rotation = (float*)eOCT_entity_getField(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.rotationTicket);
+        OCT_vec2* position = (OCT_vec2*)eOCT_entity_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.position2DTicket);    // __NOTE__ THESE ARE LOCAL POSITIONS, NOT GLOBAL
+        float* rotation = (float*)eOCT_entity_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.rotationTicket);
         b2Vec2 newPos = b2Body_GetPosition(physics->b2dBodyID);
         float newRot = b2Rot_GetAngle(b2Body_GetRotation(physics->b2dBodyID));
 
@@ -69,41 +69,41 @@ void eOCT_PHYSICS_update(OCT_global context) {
     }
 }
 
-void eOCT_PHYSICS_updateCustomLoop(OCT_global context) {
-    eOCT_pool* physicsPool = eOCT_component_getPool(context, iOCT_physicsSystem_inst.physics2DKey);
-    iOCT_physics2D_oct* physicsArray = (iOCT_physics2D_oct*)physicsPool->array;
-    eOCT_contextToken contextToken = eOCT_context_getToken(context);
-    for (OCT_index physCtr = 0; physCtr < physicsPool->count; physCtr++) {
-        iOCT_physics2D_oct* physics = &physicsArray[physCtr];
-
-        if (physics->fixed) {
-            continue;
-        }
-        OCT_vec2* position = (OCT_vec2*)eOCT_entity_getField(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.position2DTicket);    // __NOTE__ THESE ARE LOCAL POSITIONS, NOT GLOBAL
-        float* rotation = (float*)eOCT_entity_getField(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.rotationTicket);
-        physics->prevPos = *position;
-        // iOCT_physics2D_integrateEuler(physics, position, rotation, iOCT_physicsSystem_inst.dt);
-    }
-
-    eOCT_pool* ropePool = &eOCT_dataPool_getLocal(iOCT_physicsSystem_inst.distance2DKey, context)->pool;
-    iOCT_rope2D* ropeArray = (iOCT_rope2D*)ropePool->array;
-    eOCT_pool* hitboxPool = &eOCT_dataPool_getLocal(iOCT_physicsSystem_inst.collider2DKey, context)->pool;
-    iOCT_hitbox2D* hitboxArray = (iOCT_hitbox2D*)hitboxPool->array;
-    for (OCT_index iteration = 0; iteration < iOCT_physicsSystem_inst.constraintSolveIterations; iteration++) {
-        for (OCT_index ropeCtr = 0; ropeCtr < ropePool->count; ropeCtr++) {
-            iOCT_rope2D rope = ropeArray[ropeCtr];
-            iOCT_rope2D_solve(rope, contextToken);
-        }
-
-        for (OCT_index hitboxCtr = 0; hitboxCtr < hitboxPool->count; hitboxCtr++) {
-            iOCT_hitbox2D hitbox = hitboxArray[hitboxCtr];
-            for (OCT_index compareCtr = hitboxCtr + 1; compareCtr < hitboxPool->count; compareCtr++) {
-                iOCT_hitbox2D compare = hitboxArray[compareCtr];
-                iOCT_hitbox2D_solve(hitbox, compare);
-            }
-        }
-    }
-}
+// void eOCT_PHYSICS_updateCustomLoop(OCT_global context) {
+//     eOCT_pool* physicsPool = eOCT_component_getPool(context, iOCT_physicsSystem_inst.physics2DKey);
+//     iOCT_physics2D_oct* physicsArray = (iOCT_physics2D_oct*)physicsPool->array;
+//     eOCT_contextToken contextToken = eOCT_context_getToken(context);
+//     for (OCT_index physCtr = 0; physCtr < physicsPool->count; physCtr++) {
+//         iOCT_physics2D_oct* physics = &physicsArray[physCtr];
+//
+//         if (physics->fixed) {
+//             continue;
+//         }
+//         OCT_vec2* position = (OCT_vec2*)eOCT_entity_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.position2DTicket);    // __NOTE__ THESE ARE LOCAL POSITIONS, NOT GLOBAL
+//         float* rotation = (float*)eOCT_entity_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.rotationTicket);
+//         physics->prevPos = *position;
+//         // iOCT_physics2D_integrateEuler(physics, position, rotation, iOCT_physicsSystem_inst.dt);
+//     }
+//
+//     eOCT_pool* ropePool = &eOCT_dataPool_getLocal(iOCT_physicsSystem_inst.distance2DKey, context)->pool;
+//     iOCT_rope2D* ropeArray = (iOCT_rope2D*)ropePool->array;
+//     eOCT_pool* hitboxPool = &eOCT_dataPool_getLocal(iOCT_physicsSystem_inst.collider2DKey, context)->pool;
+//     iOCT_hitbox2D* hitboxArray = (iOCT_hitbox2D*)hitboxPool->array;
+//     for (OCT_index iteration = 0; iteration < iOCT_physicsSystem_inst.constraintSolveIterations; iteration++) {
+//         for (OCT_index ropeCtr = 0; ropeCtr < ropePool->count; ropeCtr++) {
+//             iOCT_rope2D rope = ropeArray[ropeCtr];
+//             iOCT_rope2D_solve(rope, contextToken);
+//         }
+//
+//         for (OCT_index hitboxCtr = 0; hitboxCtr < hitboxPool->count; hitboxCtr++) {
+//             iOCT_hitbox2D hitbox = hitboxArray[hitboxCtr];
+//             for (OCT_index compareCtr = hitboxCtr + 1; compareCtr < hitboxPool->count; compareCtr++) {
+//                 iOCT_hitbox2D compare = hitboxArray[compareCtr];
+//                 // iOCT_hitbox2D_solve(hitbox, compare);
+//             }
+//         }
+//     }
+// }
 
 
 b2Vec2 iOCT_toB2Vec2(OCT_vec2 octVec2) {

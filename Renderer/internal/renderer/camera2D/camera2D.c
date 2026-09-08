@@ -38,7 +38,8 @@ void OCT_camera2D_zoomBy(OCT_local entity, float factor) {
         iOCT_window* focusedWindow = eOCT_mappedPool_getByID(&iOCT_windowSystem_inst.windowMPool, iOCT_windowSystem_inst.focusedWindowID);
         entity = focusedWindow->activeCameraSourceEntity;
     }
-    iOCT_camera2D* camera = eOCT_entity_getComponent(entity, iOCT_renderer_inst.camera2DKey);
+    // iOCT_camera2D* camera = eOCT_entity_getComponent(entity, iOCT_renderer_inst.camera2DKey);
+    iOCT_camera2D* camera = iOCT_camera2D_get(entity);
 
     camera->zoom = factor;
     camera->cameraMatrix = OCT_mat3_scale(camera->cameraMatrix, (OCT_vec2){factor, factor});

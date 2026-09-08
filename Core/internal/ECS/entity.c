@@ -135,7 +135,7 @@ void* eOCT_entity_getComponent(OCT_local entity, eOCT_componentKey component) {
 // 	return dataLoc;
 // }
 
-void* eOCT_entity_getField(eOCT_contextToken contextToken, OCT_local entity, eOCT_fieldTicket field) {
+void* eOCT_entity_getFieldByToken(eOCT_contextToken contextToken, OCT_local entity, eOCT_fieldTicket field) {
 	if (!contextToken.valid) {
 		OCT_ERROR_LOG(OCT_EXIT_STALE_REFERENCE, "Context token invalid");
 	}
@@ -152,7 +152,7 @@ void* eOCT_entity_getField(eOCT_contextToken contextToken, OCT_local entity, eOC
 
 	return fieldLoc;
 }
-void* eOCT_entity_getFieldOnce(OCT_local entity, eOCT_fieldTicket field) {
+void* eOCT_entity_getField(OCT_local entity, eOCT_fieldTicket field) {
 	iOCT_entityContext* context = iOCT_entityContext_get(entity.containerID);
 	OCT_index entityIndex = eOCT_IDMap_getIndex(&context->entityIDMap, entity.objectID);
 

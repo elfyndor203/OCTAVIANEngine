@@ -154,7 +154,7 @@ void iOCT_renderer_uploadAll(OCT_global contextHandle) {
 
         // resolve final transform
         iOCT_spriteData spriteData = spriteArray[spriteCtr].spriteData;
-        OCT_mat3* entityTransformPtr = (OCT_mat3*)eOCT_entity_getField(contextToken, sprite.entityHandle, iOCT_renderer_inst.transform2DTicket);
+        OCT_mat3* entityTransformPtr = (OCT_mat3*)eOCT_entity_getFieldByToken(contextToken, sprite.entityHandle, iOCT_renderer_inst.transform2DTicket);
         OCT_mat3 entityTransform;
         if (entityTransformPtr == NULL) {
             entityTransform = OCT_mat3_identity;
