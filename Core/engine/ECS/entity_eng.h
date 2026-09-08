@@ -4,14 +4,11 @@
 #include "layout/types.h"
 #include "registry/registry_eng.h"
 
-/**
- *
- * @param entity
- * @param component
- * @return componentDataLocation
- */
-// void* eOCT_entity_attachComponentOld(OCT_handle entity, eOCT_componentKey component);
-// void* eOCT_entity_attachComponentSortedOld(OCT_handle entity, eOCT_componentKey component, OCT_index sortValue);
+#define OCT_DEFINE_COMPONENT_ACCESSOR(componentName, keyHolder, keyHolderMember)\
+    (componentName* componentName##_get(OCT_local entityHandle) { \
+        return (componentName*)eOCT_entity_getComponent(entityHandle, keyHolder.keyHolderMember); \
+    })
+
 void* eOCT_entity_attachComponent(OCT_local entity, eOCT_componentKey componentKey, void* source, OCT_index* outIndex);
 // void* eOCT_entity_getComponent(eOCT_contextToken contextToken, OCT_local entity, eOCT_componentKey component);
 void* eOCT_entity_getComponent(OCT_local entity, eOCT_componentKey component);
