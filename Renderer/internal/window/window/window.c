@@ -105,8 +105,9 @@ OCT_mat3 iOCT_window_screenToWorld(iOCT_window window) {
     if (OCT_local_isNULL(window.activeCameraSourceEntity)) {
         return OCT_mat3_identity;
     }
-    iOCT_camera2D camera = *(iOCT_camera2D*)eOCT_entity_getComponent(window.activeCameraSourceEntity, iOCT_renderer_inst.camera2DKey);
-    OCT_mat3 entityGlobalTransform = *(OCT_mat3*)eOCT_entity_getField(window.activeCameraSourceEntity, iOCT_renderer_inst.transform2DTicket);
+    iOCT_camera2D camera = *iOCT_camera2D_get(window.activeCameraSourceEntity);
+    OCT_mat3 entityGlobalTransform = *iOCT_globalMatrix2D_getField(window.activeCameraSourceEntity);
+    // OCT_mat3 entityGlobalTransform = *(OCT_mat3*)eOCT_entity_getField(window.activeCameraSourceEntity, iOCT_renderer_inst.globalMatrix2DTicket);
     OCT_vec2 windowRes = window.currentResolution;
 
     OCT_vec2 toCameraScale = { 1.0f / window.currentResolution.x, -1.0f / window.currentResolution.y }; // gets screen to 1x1
@@ -134,8 +135,8 @@ OCT_mat3 iOCT_window_screenToScreenSpace(iOCT_window window) {
 }
 
 OCT_mat3 iOCT_window_worldToNDC(iOCT_window window) {
-    OCT_mat3 entityGlobalTransform = *(OCT_mat3*)eOCT_entity_getField(window.activeCameraSourceEntity, iOCT_renderer_inst.transform2DTicket);
-    iOCT_camera2D camera = *(iOCT_camera2D*)(eOCT_entity_getComponent(window.activeCameraSourceEntity, iOCT_renderer_inst.camera2DKey));
+    OCT_mat3 entityGlobalTransform = *iOCT_globalMatrix2D_getField(window.activeCameraSourceEntity);
+    iOCT_camera2D camera = *iOCT_camera2D_get(window.activeCameraSourceEntity);
 
     OCT_mat3 cameraGlobal = OCT_mat3_mul(entityGlobalTransform, camera.cameraMatrix);
     OCT_mat3 worldToCamera = OCT_mat3_inv(cameraGlobal);
@@ -149,7 +150,7 @@ OCT_mat3 iOCT_window_worldToNDC(iOCT_window window) {
 //     if (OCT_handle_isNULL(window.activeCameraSourceEntity)) {
 //         return OCT_mat3_identity;
 //     }
-//     iOCT_camera2D camera = *(iOCT_camera2D*)eOCT_entity_getComponent(window.activeCameraSourceEntity, iOCT_renderer_inst.camera2DKey);
+//     iOCT_camera2D camera = *iOCT_camera2D_get(window.activeCameraSourceEntity);
 //
 //     return camera.cameraMatrix;
 // }

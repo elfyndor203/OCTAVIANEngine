@@ -11,7 +11,7 @@ struct iOCT_renderer {
     // system information
     OCT_ID systemID;
 
-    eOCT_fieldTicket transform2DTicket;
+    eOCT_fieldTicket globalMatrix2DTicket;
     eOCT_fieldTicket windowVAOCache;
     eOCT_componentKey sprite2DKey;
     eOCT_componentKey camera2DKey;
@@ -41,6 +41,7 @@ struct iOCT_renderer {
 
 extern iOCT_renderer iOCT_renderer_inst;
 
+eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(iOCT_globalMatrix2D, OCT_mat3, iOCT_renderer_inst, globalMatrix2DTicket)
 void system_init_RENDERER();
 
 void iOCT_renderer_drawLayer();

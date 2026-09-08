@@ -18,7 +18,7 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
     OCT_local potentialPhysicsSourceEntity = entity;
     OCT_local physicsSourceEntity = OCT_LOCAL_NULL;
     while (!foundPhysicsSourceEntity) {
-        OCT_local parent = *(OCT_local*)eOCT_entity_getField(potentialPhysicsSourceEntity, iOCT_physicsSystem_inst.transformParentTicket);
+        OCT_local parent = *iOCT_transformParent_getField(potentialPhysicsSourceEntity);
         if (eOCT_entity_isRoot(parent)) {
             foundPhysicsSourceEntity = true;
             physicsSourceEntity = potentialPhysicsSourceEntity;

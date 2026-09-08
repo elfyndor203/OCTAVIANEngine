@@ -28,6 +28,7 @@ struct iOCT_physicsSystem {
 extern iOCT_physicsSystem iOCT_physicsSystem_inst;
 
 eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(iOCT_globalMatrix2D, OCT_mat3, iOCT_physicsSystem_inst, globalMatrix2DTicket)
+eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(iOCT_transformParent, OCT_local, iOCT_physicsSystem_inst, transformParentTicket)
 void iOCT_physicsSystem_init();
 void iOCT_physicsSystem_contextSetup(OCT_global context);
 

@@ -56,7 +56,7 @@ void system_register_RENDERER() {
     eOCT_fieldRequest transform2D = {
         .name = "globalTransform2D",
         .type = eOCT_TYPE_MAT3,
-        .ticketCache = &iOCT_renderer_inst.transform2DTicket,
+        .ticketCache = &iOCT_renderer_inst.globalMatrix2DTicket,
         .optional = false,
         .providerType = eOCT_DATAPATTERN_COMPONENT
     };

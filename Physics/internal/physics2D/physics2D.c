@@ -28,7 +28,7 @@ static OCT_vec2 iOCT_physics2D_resolveFrameNetForceOld(iOCT_physics2D_oct* physi
 // }
 
 void OCT_physics2D_attachNew(OCT_local entity, float mass, bool dynamic) {
-    OCT_local* parentEntity = eOCT_entity_getField(entity, iOCT_physicsSystem_inst.transformParentTicket);
+    OCT_local* parentEntity = iOCT_transformParent_getField(entity);
     if (!eOCT_entity_isRoot(*parentEntity)) {
         OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "Physics can only be applied to children of the ROOT. Further children are treated as part of the same rigid body.");
     }
