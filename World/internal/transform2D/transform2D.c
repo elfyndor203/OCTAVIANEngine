@@ -15,7 +15,8 @@ bool OCT_transform2D_attach(OCT_local entity, OCT_local parentEntity) {
 		printf("Cannot parent to entity in different context\n");
 		return false;
 	}
-	iOCT_transform2D parentTransform = *(iOCT_transform2D*)eOCT_entity_getComponent(parentEntity, iOCT_world_inst.transform2DKey);
+	// iOCT_transform2D parentTransform = *(iOCT_transform2D*)eOCT_entity_getComponent(parentEntity, iOCT_world_inst.transform2DKey);
+	iOCT_transform2D parentTransform = *iOCT_transform2D_get(parentEntity);
 
 	OCT_index index;
 	iOCT_transform2D transform = {
@@ -48,7 +49,7 @@ bool OCT_transform2D_attach(OCT_local entity, OCT_local parentEntity) {
 }
 
 OCT_vec2 OCT_transform2D_moveTo(OCT_local entity, OCT_vec2 destination) {
-	iOCT_transform2D* transform = (iOCT_transform2D*)eOCT_entity_getComponent(entity, iOCT_world_inst.transform2DKey);
+	iOCT_transform2D* transform = iOCT_transform2D_get(entity);
 	OCT_vec2 originalPosition = transform->position;
 
 	iOCT_transform2D* parentTransform = (iOCT_transform2D*)eOCT_entity_getComponent(transform->parentEntityHandle, iOCT_world_inst.transform2DKey);

@@ -5,9 +5,9 @@
 #include "registry/registry_eng.h"
 
 #define OCT_DEFINE_COMPONENT_ACCESSOR(componentName, keyHolder, keyHolderMember)\
-    (componentName* componentName##_get(OCT_local entityHandle) { \
+    static inline componentName* componentName##_get(OCT_local entityHandle) { \
         return (componentName*)eOCT_entity_getComponent(entityHandle, keyHolder.keyHolderMember); \
-    })
+    }
 
 void* eOCT_entity_attachComponent(OCT_local entity, eOCT_componentKey componentKey, void* source, OCT_index* outIndex);
 // void* eOCT_entity_getComponent(eOCT_contextToken contextToken, OCT_local entity, eOCT_componentKey component);
