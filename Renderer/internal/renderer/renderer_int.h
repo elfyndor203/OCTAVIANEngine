@@ -4,15 +4,9 @@
 #include "OCT_Core_eng.h"
 #include <glad/glad.h>
 
-#include "sprite2D/sprite2D_int.h"
-
 #define GL_CHECK() { GLenum err = glGetError(); if (err != GL_NO_ERROR) printf("GL error %d at line %d\n", err, __LINE__); }
 #define iOCT_SYSTEMTEX_DIMENSIONS ((OCT_vec2){100, 100})
 
-struct iOCT_spriteFullData {
-    iOCT_spriteData spriteData;
-    OCT_mat3 transform;
-};
 struct iOCT_renderer {
     // system information
     OCT_ID systemID;
