@@ -4,9 +4,14 @@
 #include "layout/types.h"
 #include "registry/registry_eng.h"
 
-#define OCT_DEFINE_COMPONENT_ACCESSOR(componentName, keyHolder, keyHolderMember)\
+#define eOCT_DEFINE_COMPONENT_ACCESSOR(componentName, keyHolder, keyHolderMember)\
     static inline componentName* componentName##_get(OCT_local entityHandle) { \
         return (componentName*)eOCT_entity_getComponent(entityHandle, keyHolder.keyHolderMember); \
+    }
+
+#define eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(eOCT_TYPE, fieldName, ticketHolder, ticketHolderMember)\
+    static inline eOCT_TYPE* fieldName##_get(OCT_local entityHandle) { \
+        return (eOCT_TYPE*)eOCT_entity_getFieldOnce(entityHandle, ticketHolder.ticketHolderMember) \
     }
 
 void* eOCT_entity_attachComponent(OCT_local entity, eOCT_componentKey componentKey, void* source, OCT_index* outIndex);

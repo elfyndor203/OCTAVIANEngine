@@ -8,8 +8,8 @@
 #include "physics2D/physics2D_int.h"
 
 OCT_local OCT_distance2D_constrain(OCT_local entityA, OCT_local entityB, OCT_vec2 anchorA, OCT_vec2 anchorB, float distance) {
-    iOCT_physics2D_b2* physA = eOCT_entity_getComponent(entityA, iOCT_physicsSystem_inst.physics2DKey);
-    iOCT_physics2D_b2* physB = eOCT_entity_getComponent(entityB, iOCT_physicsSystem_inst.physics2DKey);
+    iOCT_physics2D_b2* physA = iOCT_physics2D_b2_get(entityA);
+    iOCT_physics2D_b2* physB = iOCT_physics2D_b2_get(entityB);
     b2WorldId worldID = *(b2WorldId*)eOCT_single_getLocal(iOCT_physicsSystem_inst.box2DWorldKey, entityA.contextHandle);
 
     b2DistanceJointDef jointDef = b2DefaultDistanceJointDef();
@@ -35,8 +35,8 @@ OCT_local OCT_distance2D_constrain(OCT_local entityA, OCT_local entityB, OCT_vec
 }
 
 OCT_local OCT_rope2D_constrain(OCT_local entityA, OCT_local entityB, OCT_vec2 anchorA, OCT_vec2 anchorB, float length) {
-    iOCT_physics2D_b2* physA = eOCT_entity_getComponent(entityA, iOCT_physicsSystem_inst.physics2DKey);
-    iOCT_physics2D_b2* physB = eOCT_entity_getComponent(entityB, iOCT_physicsSystem_inst.physics2DKey);
+    iOCT_physics2D_b2* physA = iOCT_physics2D_b2_get(entityA);
+    iOCT_physics2D_b2* physB = iOCT_physics2D_b2_get(entityB);
     b2WorldId worldID = *(b2WorldId*)eOCT_single_getLocal(iOCT_physicsSystem_inst.box2DWorldKey, entityA.contextHandle);
 
     b2DistanceJointDef jointDef = b2DefaultDistanceJointDef();

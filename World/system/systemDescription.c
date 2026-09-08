@@ -8,37 +8,37 @@
 void system_register_WORLD() {
 	eOCT_fieldDescription position = {
 		.name = "position",
-		.type = eOCT_DATATYPE_VEC2,
+		.type = eOCT_TYPE_VEC2,
 		.offset = offsetof(iOCT_transform2D, position),
 		.providerType = eOCT_DATAPATTERN_COMPONENT
 	};
 	eOCT_fieldDescription rotation = {
 		.name = "rotation",
-		.type = eOCT_DATATYPE_FLOAT32,
+		.type = eOCT_TYPE_FLOAT32,
 		.offset = offsetof(iOCT_transform2D, rotation),
 		.providerType = eOCT_DATAPATTERN_COMPONENT
 	};
 	eOCT_fieldDescription scaleX = {
 		.name = "scale.x",
-		.type = eOCT_DATATYPE_FLOAT32,
+		.type = eOCT_TYPE_FLOAT32,
 		.offset = offsetof(iOCT_transform2D, scale) + offsetof(OCT_vec2, x),
 		.providerType = eOCT_DATAPATTERN_COMPONENT
 	};
 	eOCT_fieldDescription scaleY = {
 		.name = "scale.y",
-		.type = eOCT_DATATYPE_FLOAT32,
+		.type = eOCT_TYPE_FLOAT32,
 		.offset = offsetof(iOCT_transform2D, scale) + offsetof(OCT_vec2, y),
 		.providerType = eOCT_DATAPATTERN_COMPONENT
 	};
 	eOCT_fieldDescription matrix2D = {
 		.name = "globalTransform2D",
-		.type = eOCT_DATATYPE_MAT3,
+		.type = eOCT_TYPE_MAT3,
 		.offset = offsetof(iOCT_transform2D, globalMatrix),
 		.providerType = eOCT_DATAPATTERN_COMPONENT
 	};
 	eOCT_fieldDescription transformParent = {
 		.name = "transformParent",
-		.type = eOCT_DATATYPE_HANDLE_LOCAL,
+		.type = eOCT_TYPE_HANDLE_LOCAL,
 		.providerType = eOCT_DATAPATTERN_COMPONENT,
 		.offset = offsetof(iOCT_transform2D, parentEntityHandle)
 	};

@@ -33,7 +33,7 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
     OCT_vec2 relativeOrigin = OCT_mat3_getTranslation(targetToPhysicsSourceTransform);
     float relativeRadians = OCT_mat3_getRotation(targetToPhysicsSourceTransform);
 
-    iOCT_physics2D_b2* physics = eOCT_entity_getComponent(physicsSourceEntity, iOCT_physicsSystem_inst.physics2DKey);
+    iOCT_physics2D_b2* physics = iOCT_physics2D_b2_get(physicsSourceEntity);
     b2BodyId entityBodyID = physics->b2dBodyID;
 
     OCT_vec2 dimensionsMeters = OCT_vec2_div(dimensions, iOCT_physicsSystem_inst.unitsPerB2Meter);

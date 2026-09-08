@@ -7,28 +7,28 @@
 void system_register_INPUT() {
     eOCT_fieldRequest key = {
         .name = "glfwKeys",
-        .type = eOCT_DATATYPE_INT64,
+        .type = eOCT_TYPE_INT64,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.keyTicket,
         .providerType = eOCT_DATAPATTERN_EVENT
     };
     eOCT_fieldRequest keyPress = {
         .name = "glfwKeyPress",
-        .type = eOCT_DATATYPE_BOOL,
+        .type = eOCT_TYPE_BOOL8,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.keyPressTicket,
         .providerType = eOCT_DATAPATTERN_EVENT
     };
     eOCT_fieldRequest keyRelease = {
         .name = "glfwKeyRelease",
-        .type = eOCT_DATATYPE_BOOL,
+        .type = eOCT_TYPE_BOOL8,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.keyReleaseTicket,
         .providerType = eOCT_DATAPATTERN_EVENT,
     };
     eOCT_fieldRequest mouseButton = {
         .name = "glfwMouseButton",
-        .type = eOCT_DATATYPE_INT64,
+        .type = eOCT_TYPE_INT64,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.mouseButtonTicket,
         .providerType = eOCT_DATAPATTERN_EVENT,
@@ -36,7 +36,7 @@ void system_register_INPUT() {
     };
     eOCT_fieldRequest mouseButtonPress = {
         .name = "glfwMouseButtonPress",
-        .type = eOCT_DATATYPE_BOOL,
+        .type = eOCT_TYPE_BOOL8,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.mouseButtonPressTicket,
         .providerType = eOCT_DATAPATTERN_EVENT,
@@ -44,7 +44,7 @@ void system_register_INPUT() {
     };
     eOCT_fieldRequest mouseButtonRelease = {
         .name = "glfwMouseButtonRelease",
-        .type = eOCT_DATATYPE_BOOL,
+        .type = eOCT_TYPE_BOOL8,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.mouseButtonReleaseTicket,
         .providerType = eOCT_DATAPATTERN_EVENT,
@@ -66,7 +66,7 @@ void system_register_INPUT() {
     // };
     eOCT_fieldRequest mouseScroll = {
         .name = "glfwMouseScrollDelta",
-        .type = eOCT_DATATYPE_FLOAT32,
+        .type = eOCT_TYPE_FLOAT32,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.mouseScrollTicket,
         .providerType = eOCT_DATAPATTERN_EVENT
@@ -79,7 +79,7 @@ void system_register_INPUT() {
     // };
     eOCT_fieldRequest deltaTime = {
         .name = "deltaFrameTime",
-        .type = eOCT_DATATYPE_DOUBLE64,
+        .type = eOCT_TYPE_DOUBLE64,
         .optional = false,
         .ticketCache = &iOCT_inputSystem_inst.deltaTimeTicket,
         .providerType = eOCT_DATAPATTERN_SINGLE

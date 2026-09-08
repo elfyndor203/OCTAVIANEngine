@@ -12,7 +12,7 @@ void system_register_PHYSICS() {
         .name = "box2DWorld",
         .offset = 0,
         .providerType = eOCT_DATAPATTERN_SINGLE,
-        .type = eOCT_DATATYPE_CUSTOM
+        .type = eOCT_TYPE_CUSTOM
     };
     eOCT_singleDescription box2DWorldSingle = {
         .name = "box2DWorld",
@@ -53,28 +53,28 @@ void system_register_PHYSICS() {
         .name = "globalTransform2D",
         .optional = false,
         .ticketCache = &iOCT_physicsSystem_inst.transform2DTicket,
-        .type = eOCT_DATATYPE_MAT3,
+        .type = eOCT_TYPE_MAT3,
         .providerType = eOCT_DATAPATTERN_COMPONENT
     };
     eOCT_fieldRequest position2D = {
         .name = "position",
         .optional = false,
         .ticketCache = &iOCT_physicsSystem_inst.position2DTicket,
-        .type = eOCT_DATATYPE_VEC2,
+        .type = eOCT_TYPE_VEC2,
         .providerType = eOCT_DATAPATTERN_COMPONENT
     };
     eOCT_fieldRequest rotation2D = {
         .name = "rotation",
         .optional = false,
         .ticketCache = &iOCT_physicsSystem_inst.rotationTicket,
-        .type = eOCT_DATATYPE_FLOAT32,
+        .type = eOCT_TYPE_FLOAT32,
         .providerType = eOCT_DATAPATTERN_COMPONENT
     };
     eOCT_fieldRequest transformParent = {
         .name = "transformParent",
         .optional = false,
         .ticketCache = &iOCT_physicsSystem_inst.transformParentTicket,
-        .type = eOCT_DATATYPE_HANDLE_LOCAL,
+        .type = eOCT_TYPE_HANDLE_LOCAL,
         .providerType = eOCT_DATAPATTERN_COMPONENT
     };
 

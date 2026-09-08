@@ -14,7 +14,7 @@ void system_register_RENDERER() {
         .name = "screenSpace",
         .offset = 0,
         .providerType = eOCT_DATAPATTERN_SINGLE,
-        .type = eOCT_DATATYPE_BOOL
+        .type = eOCT_TYPE_BOOL8
     };
     eOCT_singleDescription screenSpaceSingle = {
         .name = "screenSpace",
@@ -55,7 +55,7 @@ void system_register_RENDERER() {
 
     eOCT_fieldRequest transform2D = {
         .name = "globalTransform2D",
-        .type = eOCT_DATATYPE_MAT3,
+        .type = eOCT_TYPE_MAT3,
         .ticketCache = &iOCT_renderer_inst.transform2DTicket,
         .optional = false,
         .providerType = eOCT_DATAPATTERN_COMPONENT
@@ -79,19 +79,19 @@ void system_register_WINDOW() {
         .name = "glfwKeys",
         .providerType = eOCT_DATAPATTERN_EVENT,
         .offset = offsetof(iOCT_keyEvent, key),
-        .type = eOCT_DATATYPE_INT64
+        .type = eOCT_TYPE_INT64
     };
     eOCT_fieldDescription glfwKeyPress = {
         .name = "glfwKeyPress",
         .providerType = eOCT_DATAPATTERN_EVENT,
         .offset = offsetof(iOCT_keyEvent, pressed),
-        .type = eOCT_DATATYPE_BOOL
+        .type = eOCT_TYPE_BOOL8
     };
     eOCT_fieldDescription glfwKeyRelease = {
         .name = "glfwKeyRelease",
         .providerType = eOCT_DATAPATTERN_EVENT,
         .offset = offsetof(iOCT_keyEvent, released),
-        .type = eOCT_DATATYPE_BOOL
+        .type = eOCT_TYPE_BOOL8
     };
     eOCT_fieldDescription keyFields[3] = { glfwKeys, glfwKeyPress, glfwKeyRelease };
     eOCT_eventDescription keyEvents = {
@@ -104,19 +104,19 @@ void system_register_WINDOW() {
 
     eOCT_fieldDescription mouseButton = {
         .name = "glfwMouseButton",
-        .type = eOCT_DATATYPE_INT64,
+        .type = eOCT_TYPE_INT64,
         .offset = offsetof(iOCT_mouseButtonEvent, button),
         .providerType = eOCT_DATAPATTERN_EVENT
     };
     eOCT_fieldDescription mouseButtonPress = {
         .name = "glfwMouseButtonPress",
-        .type = eOCT_DATATYPE_BOOL,
+        .type = eOCT_TYPE_BOOL8,
         .offset = offsetof(iOCT_mouseButtonEvent, pressed),
         .providerType = eOCT_DATAPATTERN_EVENT
     };
     eOCT_fieldDescription mouseButtonRelease = {
         .name = "glfwMouseButtonRelease",
-        .type = eOCT_DATATYPE_BOOL,
+        .type = eOCT_TYPE_BOOL8,
         .offset = offsetof(iOCT_mouseButtonEvent, released),
         .providerType = eOCT_DATAPATTERN_EVENT
     };
@@ -153,7 +153,7 @@ void system_register_WINDOW() {
         .name = "glfwMouseScrollDelta",
         .providerType = eOCT_DATAPATTERN_EVENT,
         .offset = offsetof(iOCT_mouseScrollEvent, yDelta),
-        .type = eOCT_DATATYPE_FLOAT32
+        .type = eOCT_TYPE_FLOAT32
     };
     eOCT_eventDescription mouseScrollEvents = {
         .name = "mouseScrollEvents",
@@ -179,7 +179,7 @@ void system_register_WINDOW() {
         .name = "contextCursorPos",
         .providerType = eOCT_DATAPATTERN_SINGLE,
         .offset = 0,
-        .type = eOCT_DATATYPE_VEC2
+        .type = eOCT_TYPE_VEC2
     };
     eOCT_singleDescription cursorPosSingle = {
         .name = "contextCursorPosSingle",
@@ -191,7 +191,7 @@ void system_register_WINDOW() {
         .name = "globalTransform2D",
         .optional = false,
         .ticketCache = &iOCT_windowSystem_inst.transform2DTicket,
-        .type = eOCT_DATATYPE_MAT3,
+        .type = eOCT_TYPE_MAT3,
         .providerType = eOCT_DATAPATTERN_COMPONENT
     };
     eOCT_systemDescription windowSystem = {

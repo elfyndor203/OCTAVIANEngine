@@ -7,7 +7,7 @@
 void system_register_PLATFORM() {
     eOCT_fieldDescription time = {
         .name = "runningTime",
-        .type = eOCT_DATATYPE_DOUBLE64,
+        .type = eOCT_TYPE_DOUBLE64,
         .providerType = eOCT_DATAPATTERN_SINGLE,
         .offset = 0
     };
@@ -19,7 +19,7 @@ void system_register_PLATFORM() {
     };
     eOCT_fieldDescription deltaTime = {
         .name = "deltaFrameTime",
-        .type = eOCT_DATATYPE_DOUBLE64,
+        .type = eOCT_TYPE_DOUBLE64,
         .providerType = eOCT_DATAPATTERN_SINGLE,
         .offset = 0
     };

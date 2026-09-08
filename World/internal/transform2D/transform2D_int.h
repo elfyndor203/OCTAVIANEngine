@@ -22,7 +22,7 @@ struct iOCT_transform2D {
 	OCT_mat3 globalMatrix;
 };
 
-OCT_DEFINE_COMPONENT_ACCESSOR(iOCT_transform2D, iOCT_world_inst, transform2DKey)
+eOCT_DEFINE_COMPONENT_ACCESSOR(iOCT_transform2D, iOCT_world_inst, transform2DKey)
 void iOCT_transform2D_generateRoot(OCT_local rootEntity);
 void iOCT_transform2D_propagate(OCT_global context);
 

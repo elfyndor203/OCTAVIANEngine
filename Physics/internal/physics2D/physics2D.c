@@ -75,7 +75,7 @@ void OCT_physics2D_attachNew(OCT_local entity, float mass, bool dynamic) {
 // }
 
 OCT_vec2 OCT_physics2D_setVelocity(OCT_local entity, OCT_vec2 velocity) {
-    iOCT_physics2D_b2* physics = eOCT_entity_getComponent(entity, iOCT_physicsSystem_inst.physics2DKey);
+    iOCT_physics2D_b2* physics = iOCT_physics2D_b2_get(entity);
     b2BodyId b2Body = physics->b2dBodyID;
 
     b2Vec2 oldVelocityMeters = b2Body_GetLinearVelocity(b2Body);
@@ -96,7 +96,7 @@ OCT_vec2 OCT_physics2D_setVelocity(OCT_local entity, OCT_vec2 velocity) {
 // }
 
 void OCT_physics2D_addImpulse(OCT_local entity, OCT_vec2 impulse) {
-    iOCT_physics2D_b2* physics = eOCT_entity_getComponent(entity, iOCT_physicsSystem_inst.physics2DKey);
+    iOCT_physics2D_b2* physics = iOCT_physics2D_b2_get(entity);
     b2BodyId b2Body = physics->b2dBodyID;
 
     b2Vec2 impulseMeters = iOCT_toB2Vec2(OCT_vec2_div(impulse, iOCT_physicsSystem_inst.unitsPerB2Meter));
@@ -104,7 +104,7 @@ void OCT_physics2D_addImpulse(OCT_local entity, OCT_vec2 impulse) {
 }
 
 void OCT_physics2D_addForce(OCT_local entity, OCT_vec2 force) {
-    iOCT_physics2D_b2* physics = eOCT_entity_getComponent(entity, iOCT_physicsSystem_inst.physics2DKey);
+    iOCT_physics2D_b2* physics = iOCT_physics2D_b2_get(entity);
     b2BodyId b2Body = physics->b2dBodyID;
 
     b2Vec2 forceMeters = iOCT_toB2Vec2(OCT_vec2_div(force, iOCT_physicsSystem_inst.unitsPerB2Meter));
@@ -112,7 +112,7 @@ void OCT_physics2D_addForce(OCT_local entity, OCT_vec2 force) {
 }
 
 void OCT_physics2D_lockRotation(OCT_local entity, float radians) {
-    iOCT_physics2D_b2* physics = eOCT_entity_getComponent(entity, iOCT_physicsSystem_inst.physics2DKey);
+    iOCT_physics2D_b2* physics = iOCT_physics2D_b2_get(entity);
     b2BodyId b2Body = physics->b2dBodyID;
 
     b2Rot newRotation = b2MakeRot(radians);
@@ -158,7 +158,7 @@ void OCT_physics2D_lockRotation(OCT_local entity, float radians) {
 //     return physics->velocity;
 // }
 OCT_vec2 OCT_physics2D_read(OCT_local entity) {
-    iOCT_physics2D_b2* physics = eOCT_entity_getComponent(entity, iOCT_physicsSystem_inst.physics2DKey);
+    iOCT_physics2D_b2* physics = iOCT_physics2D_b2_get(entity);
 
     b2Vec2 velocityMeters = b2Body_GetLinearVelocity(physics->b2dBodyID);
     OCT_vec2 velocity = OCT_vec2_div(iOCT_toOCTVec2(velocityMeters), iOCT_physicsSystem_inst.unitsPerB2Meter);
