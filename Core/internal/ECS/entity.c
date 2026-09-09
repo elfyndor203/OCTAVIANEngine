@@ -151,7 +151,7 @@ void* eOCT_entity_getFieldByToken(eOCT_contextToken contextToken, OCT_local enti
 	void* fieldLoc = eOCT_pool_access(componentPool, componentIndex, field.offsetFromStruct);
 
 	return fieldLoc;
-}
+} // multi use access 
 void* eOCT_entity_getField(OCT_local entity, eOCT_fieldTicket field) {
 	iOCT_entityContext* context = iOCT_entityContext_get(entity.containerID);
 	OCT_index entityIndex = eOCT_IDMap_getIndex(&context->entityIDMap, entity.objectID);
@@ -163,8 +163,8 @@ void* eOCT_entity_getField(OCT_local entity, eOCT_fieldTicket field) {
 	void* fieldLoc = eOCT_pool_access(componentPool, componentIndex, field.offsetFromStruct);
 
 	return fieldLoc;
-}
-void* iOCT_entity_getComponent(iOCT_entityContext* context, OCT_index entityIndex, OCT_index componentTypeIndex) {
+} // single use access
+void* iOCT_entity_getComponent(iOCT_entityContext* context, OCT_index entityIndex, OCT_index componentTypeIndex) {	// actual access logic
 	OCT_index* entityBase = iOCT_entity_get(context, entityIndex);
 	OCT_index* componentIndexBase = entityBase + componentTypeIndex;
 	OCT_index componentIndex = *componentIndexBase;
