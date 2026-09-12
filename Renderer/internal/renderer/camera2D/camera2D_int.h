@@ -16,4 +16,4 @@ struct iOCT_camera2D {
     OCT_mat3 cameraMatrix;
 };
 
-eOCT_DEFINE_COMPONENT_ACCESSOR(iOCT_camera2D, iOCT_renderer_inst.camera2DKey)
+eOCT_DEFINE_COMPONENT(iOCT_camera2D, iOCT_renderer_inst.camera2DKey)

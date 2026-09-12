@@ -60,11 +60,21 @@ add_library(Core STATIC
         internal/utilities/allocations.c
         include/utilities/memory.h
         init/Core_shutdown.h
-        engine/registry/fields_eng.h
+        engine/registry/fields/fields_eng.h
         engine/registry/dataTypes_eng.h
-        engine/registry/dataPatterns_eng.h
         internal/events/pubEvents.c
         internal/events/pubEvents_int.h
+        engine/ECS/components/components_eng.h
+        engine/ECS/dataPools/dataPools_eng.h
+        engine/ECS/events/events_eng.h
+        engine/ECS/singles/singles_eng.h
+        engine/ECS/components/components.c
+        engine/ECS/dataPools/dataPools.c
+        engine/ECS/events/events.c
+        engine/ECS/singles/singles.c
+        engine/registry/fields/fields.c
+        engine/registry/system/systems_eng.h
+        engine/registry/system/systems.c
 )
 
 target_include_directories(Core

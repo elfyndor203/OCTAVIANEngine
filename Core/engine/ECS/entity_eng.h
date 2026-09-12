@@ -5,18 +5,6 @@
 #include "registry/registry_eng.h"
 #include "registry/dataAccess_eng.h"
 
-#define eOCT_DEFINE_COMPONENT_ACCESSOR(componentName, keyHolder)\
-    static inline componentName* componentName##_get(OCT_local entityHandle) { \
-        return (componentName*)eOCT_entity_getComponent(entityHandle, keyHolder); \
-    } \
-    static inline eOCT_pool* componentName##_getPool(OCT_global contextHandle) { \
-        return eOCT_component_getPool(contextHandle, keyHolder); \
-    }
-
-#define eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(fieldName, fieldType, ticketHolder, ticketHolderMember)\
-    static inline fieldType* fieldName##_getField(OCT_local entityHandle) { \
-        return (fieldType*)eOCT_entity_getField(entityHandle, ticketHolder.ticketHolderMember); \
-    }
 
 void* eOCT_entity_attachComponent(OCT_local entity, eOCT_componentKey componentKey, void* source, OCT_index* outIndex);
 // void* eOCT_entity_getComponent(eOCT_contextToken contextToken, OCT_local entity, eOCT_componentKey component);

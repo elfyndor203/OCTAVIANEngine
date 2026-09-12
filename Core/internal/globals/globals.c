@@ -4,8 +4,8 @@
 
 #include "events/events_int.h"
 #include "layout/systems.h"
-#include "globals/globals_int.h"
 #include "registry/registry_int.h"
+#include "ECS/dataPools/dataPools_eng.h"
 
 iOCT_globals iOCT_globals_inst = { 0 };
 

@@ -15,18 +15,13 @@
 #include "layout/systems.h"
 #include "scheduler/scheduler_int.h"
 #include "globals/globals_int.h"
+#include "registry/system/systems_eng.h"
 
 #define GROUP_UNSET 0
 #define GROUP_FAILED (-1)
 #define GROUP_SUCCESS 1
 
 static bool iOCT_registry_findField(const char* fieldName, eOCT_fieldDescription* fieldOut);
-static void iOCT_registry_registerComponent(eOCT_componentDescription* componentDesc);
-static void iOCT_registry_registerEvent(eOCT_eventDescription* eventDesc);
-static void iOCT_registry_registerDataPool(eOCT_dataPoolDescription* dataPoolDesc);
-static void iOCT_registry_registerSingle(eOCT_singleDescription* singleDesc);
-static void iOCT_registry_registerField(eOCT_fieldDescription* field, OCT_index fieldNum, OCT_ID systemID, OCT_index providerIndex, bool global);
-static OCT_index iOCT_registry_registerFields(eOCT_pool providedFields, OCT_ID systemID, OCT_index providerIndex, bool global);
 static eOCT_pool* iOCT_registry_findGlobalPool(eOCT_fieldDescription field);
 static void iOCT_registry_distributeFields();
 static void iOCT_registry_checkGroups();
@@ -254,310 +249,10 @@ void init_OCT_registry_cleanup() {
 }
 #pragma endregion
 
-OCT_ID eOCT_registry_registerSystem(eOCT_systemDescription systemDescription) {
-	OCT_ID systemID = iOCT_registry_inst.systems_free.count + OCT_ID_SYSTEM_START;
 
-	systemDescription.systemID_reg = systemID;
-	eOCT_pool_addEntryNew(&iOCT_registry_inst.systems_free, &systemDescription, NULL);
 
-	// eOCT_systemDescription** destination = (eOCT_systemDescription**)eOCT_pool_addEntryOld(&iOCT_registry_inst.systems, NULL);	// addEntry after so the ID starts at 3 instead of 3 + 1
-	// *destination = systemDescription;
-	// systemDescription->systemID_reg = systemID;
-	printf("\n--------------------------------\n");
-	printf("%02"PRIu64".--.--| System '%s':\n", systemDescription.systemID_reg, systemDescription.name);
-
-	// COMPONENTS
-	if (eOCT_pool_isEmpty(systemDescription.providedComponents)) {		// requests handed separately later, so registration ends
-		printf("No provided components\n");
-	}
-	else {
-		eOCT_componentDescription* componentArray = (eOCT_componentDescription*)systemDescription.providedComponents.array;	// register all components and all of their fields
-		for (OCT_index componentCtr = 0; componentCtr < systemDescription.providedComponents.count; componentCtr++) {
-			eOCT_componentDescription* component = &componentArray[componentCtr];
-			printf("%02"PRIu64".%02zu.--| %2cComponent %zu: %-15s\n", systemID, component->componentTypeIndex_reg, ' ', component->componentTypeIndex_reg, component->name);
-
-			iOCT_registry_registerComponent(component);
-			iOCT_registry_registerFields(component->providedFields, systemID, component->componentTypeIndex_reg, false);
-		}
-	}
-
-	printf("\n");
-	// EVENTS
-	if (eOCT_pool_isEmpty(systemDescription.providedEvents)) {
-		printf("No provided events\n");
-	}
-	else {
-		eOCT_eventDescription* eventArray = (eOCT_eventDescription*)systemDescription.providedEvents.array;
-		for (OCT_index eventCtr = 0; eventCtr < systemDescription.providedEvents.count; eventCtr++) {
-			eOCT_eventDescription* event = &eventArray[eventCtr];
-			printf("%02"PRIu64".%02zu.--| %2cEvent %zu: %-15s\n", systemID, event->eventTypeIndex_reg, ' ', event->eventTypeIndex_reg, event->name);
-
-			iOCT_registry_registerEvent(event);
-			iOCT_registry_registerFields(event->providedFields, systemID, event->eventTypeIndex_reg, event->global);
-		}
-	}
-
-	printf("\n");
-	// DATA POOLS
-	if (eOCT_pool_isEmpty(systemDescription.providedDataPools)) {
-		printf("No additional provided data\n");
-	}
-	else {
-		eOCT_dataPoolDescription* dataPoolArray = (eOCT_dataPoolDescription*)systemDescription.providedDataPools.array;
-		for (OCT_index dataPoolCtr = 0; dataPoolCtr < systemDescription.providedDataPools.count; dataPoolCtr++) {
-			eOCT_dataPoolDescription* dataPool = &dataPoolArray[dataPoolCtr];
-			printf("%02"PRIu64".%02zu.--| %2cData Pool %zu: %-15s\n", systemID, dataPool->dataPoolTypeIndex_reg, ' ', dataPool->dataPoolTypeIndex_reg, dataPool->name);
-
-			iOCT_registry_registerDataPool(dataPool);
-			iOCT_registry_registerFields(dataPool->providedFields, systemID, dataPool->dataPoolTypeIndex_reg, dataPool->global);
-		}
-	}
-
-	printf("\n");
-	// SINGLES'
-	if (eOCT_pool_isEmpty(systemDescription.providedSingles)) {
-		printf("No provided singles\n");
-	}
-	else {
-		eOCT_singleDescription* singlesArray = (eOCT_singleDescription*)systemDescription.providedSingles.array;
-		for (OCT_index singleCtr = 0; singleCtr < systemDescription.providedSingles.count; singleCtr++) {
-			eOCT_singleDescription* single = &singlesArray[singleCtr];
-			printf("%02"PRIu64".%02zu.--| %2cSingle %zu: %-15s\n", systemID, single->singleTypeIndex_reg, ' ', single->singleTypeIndex_reg, single->name);
-			if (single->providedField.offset != 0) {
-				OCT_ERROR_LOG(OCT_EXIT_REGISTRATION_FAILED, "Singles must have offset 0");
-				return OCT_ID_NULL;
-			}
-
-			iOCT_registry_registerSingle(single);
-			iOCT_registry_registerField(&single->providedField, 0, systemID, single->singleTypeIndex_reg, single->global);
-		}
-	}
-
-	eOCT_contextInitFx contextInitFx = systemDescription.contextInitFx;
-	if (contextInitFx) {
-		eOCT_pool_addEntryNew(&iOCT_registry_inst.contextInitFxs, &contextInitFx, NULL);
-	}
-	printf("--------------------------------\n\n");
-
-	return systemID;
-}
-
-#pragma region generators
-eOCT_pool eOCT_generateFieldDescriptionPool(OCT_index total, eOCT_fieldDescription description1, ...) {
-	if (total < 1) {
-		OCT_ERROR_LOG(OCT_WARNING_IMPROPER, "Directly pass empty pool if no fields are provided");
-		return eOCT_POOL_EMPTY;
-	}
-	va_list args;
-	va_start(args, description1);
-
-	eOCT_pool pool = eOCT_pool_open(OCT_ID_REGISTRY, total, sizeof(eOCT_fieldDescription));
-	bool end = false;
-	OCT_index processed = 0;
-	eOCT_fieldDescription newRequest = description1;
-	while (!end && processed < total) {
-		if (strcmp(newRequest.name, eOCT_END_FIELDS.name) == 0) { // checks for END flag
-			end = true;
-
-			if (processed != total) {										// END flag should be after all requests are processed
-				OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "Less fields provided than expected");
-				return pool;
-			}
-		} else {
-			eOCT_pool_addEntryNew(&pool, &newRequest, NULL);
-			processed++;
-			newRequest = va_arg(args, eOCT_fieldDescription);
-		}
-	}
-	eOCT_fieldDescription expectedEnd = newRequest;	// most recent: either the END flag or error
-	if (strcmp(expectedEnd.name, eOCT_END_FIELDS.name) != 0) {
-		OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "END flag not found");
-		return pool;
-	}
-
-	va_end(args);
-	return pool;
-}
-eOCT_pool eOCT_generateComponentDescriptionPool(OCT_index total, eOCT_componentDescription description1, ...) {
-	if (total < 1) {
-		OCT_ERROR_LOG(OCT_WARNING_IMPROPER, "Directly pass empty pool if no components are provided");
-		return eOCT_POOL_EMPTY;
-	}
-	va_list args;
-	va_start(args, description1);
-
-	eOCT_pool pool = eOCT_pool_open(OCT_ID_REGISTRY, total, sizeof(eOCT_componentDescription));
-	bool end = false;
-	OCT_index processed = 0;
-	eOCT_componentDescription newRequest = description1;
-	while (!end && processed < total) {
-		if (strcmp(newRequest.name, eOCT_END_COMPONENTS.name) == 0) { // checks for END flag
-			end = true;
-
-			if (processed != total) {										// END flag should be after all requests are processed
-				OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "Less components provided than expected");
-				return pool;
-			}
-		} else {
-			eOCT_pool_addEntryNew(&pool, &newRequest, NULL);
-			processed++;
-			newRequest = va_arg(args, eOCT_componentDescription);
-		}
-	}
-	eOCT_componentDescription expectedEnd = newRequest;	// most recent: either the END flag or error
-	if (strcmp(expectedEnd.name, eOCT_END_COMPONENTS.name) != 0) {
-		OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "END flag not found");
-		return pool;
-	}
-
-	va_end(args);
-	return pool;
-}
-eOCT_pool eOCT_generateDataPoolDescriptionPool(OCT_index total, eOCT_dataPoolDescription description1, ...) {
-	if (total < 1) {
-		OCT_ERROR_LOG(OCT_WARNING_IMPROPER, "Directly pass empty pool if no dataPools are provided");
-		return eOCT_POOL_EMPTY;
-	}
-	va_list args;
-	va_start(args, description1);
-
-	eOCT_pool pool = eOCT_pool_open(OCT_ID_REGISTRY, total, sizeof(eOCT_dataPoolDescription));
-	bool end = false;
-	OCT_index processed = 0;
-	eOCT_dataPoolDescription newRequest = description1;
-	while (!end && processed < total) {
-		if (strcmp(newRequest.name, eOCT_END_DATAPOOLS.name) == 0) { // checks for END flag
-			end = true;
-
-			if (processed != total) {										// END flag should be after all requests are processed
-				OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "Less dataPools provided than expected");
-				return pool;
-			}
-		} else {
-			eOCT_pool_addEntryNew(&pool, &newRequest, NULL);
-			processed++;
-			newRequest = va_arg(args, eOCT_dataPoolDescription);
-		}
-	}
-	eOCT_dataPoolDescription expectedEnd = newRequest;	// most recent: either the END flag or error
-	if (strcmp(expectedEnd.name, eOCT_END_DATAPOOLS.name) != 0) {
-		OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "END flag not found");
-		return pool;
-	}
-
-	va_end(args);
-	return pool;
-}
-eOCT_pool eOCT_generateEventDescriptionPool(OCT_index total, eOCT_eventDescription description1, ...) {
-	if (total < 1) {
-		OCT_ERROR_LOG(OCT_WARNING_IMPROPER, "Directly pass empty pool if no events are provided");
-		return eOCT_POOL_EMPTY;
-	}
-	va_list args;
-	va_start(args, description1);
-
-	eOCT_pool pool = eOCT_pool_open(OCT_ID_REGISTRY, total, sizeof(eOCT_eventDescription));
-	bool end = false;
-	OCT_index processed = 0;
-	eOCT_eventDescription newRequest = description1;
-	while (!end && processed < total) {
-		if (strcmp(newRequest.name, eOCT_END_EVENTS.name) == 0) { // checks for END flag
-			end = true;
-
-			if (processed != total) {										// END flag should be after all requests are processed
-				OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "Less events provided than expected");
-				return pool;
-			}
-		} else {
-			eOCT_pool_addEntryNew(&pool, &newRequest, NULL);
-			processed++;
-			newRequest = va_arg(args, eOCT_eventDescription);
-		}
-	}
-	eOCT_eventDescription expectedEnd = newRequest;	// most recent: either the END flag or error
-	if (strcmp(expectedEnd.name, eOCT_END_EVENTS.name) != 0) {
-		OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "END flag not found");
-		return pool;
-	}
-
-	va_end(args);
-	return pool;
-}
-eOCT_pool eOCT_generateSingleDescriptionPool(OCT_index total, eOCT_singleDescription description1, ...) {
-	if (total < 1) {
-		OCT_ERROR_LOG(OCT_WARNING_IMPROPER, "Directly pass empty pool if no singles are provided");
-		return eOCT_POOL_EMPTY;
-	}
-	va_list args;
-	va_start(args, description1);
-
-	eOCT_pool pool = eOCT_pool_open(OCT_ID_REGISTRY, total, sizeof(eOCT_singleDescription));
-	bool end = false;
-	OCT_index processed = 0;
-	eOCT_singleDescription newRequest = description1;
-	while (!end && processed < total) {
-		if (strcmp(newRequest.name, eOCT_END_SINGLES.name) == 0) { // checks for END flag
-			end = true;
-
-			if (processed != total) {										// END flag should be after all requests are processed
-				OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "Less singles provided than expected");
-				return pool;
-			}
-		} else {
-			eOCT_pool_addEntryNew(&pool, &newRequest, NULL);
-			processed++;
-			newRequest = va_arg(args, eOCT_singleDescription);
-		}
-	}
-	eOCT_singleDescription expectedEnd = newRequest;	// most recent: either the END flag or error
-	if (strcmp(expectedEnd.name, eOCT_END_SINGLES.name) != 0) {
-		OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "END flag not found");
-		return pool;
-	}
-
-	va_end(args);
-	return pool;
-}
-
-eOCT_pool eOCT_generateFieldRequestPool(OCT_index total, eOCT_fieldRequest request1, ...) {
-	if (total < 1) {
-		OCT_ERROR_LOG(OCT_WARNING_IMPROPER, "Directly pass empty pool if no fields are requested");
-		return eOCT_POOL_EMPTY;
-	}
-	va_list args;
-	va_start(args, request1);
-
-	eOCT_pool pool = eOCT_pool_open(OCT_ID_REGISTRY, total, sizeof(eOCT_fieldRequest));
-	bool end = false;
-	OCT_index processed = 0;
-	eOCT_fieldRequest newRequest = request1;
-	while (!end && processed < total) {
-		if (strcmp(newRequest.name, eOCT_END_REQUESTS.name) == 0) { // checks for END flag
-			end = true;
-
-			if (processed != total) {										// END flag should be after all requests are processed
-				OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "Less fields provided than expected");
-				return pool;
-			}
-		} else {
-			eOCT_pool_addEntryNew(&pool, &newRequest, NULL);
-			processed++;
-			newRequest = va_arg(args, eOCT_fieldRequest);
-		}
-	}
-	eOCT_fieldRequest expectedEnd = newRequest;	// most recent: either the END flag or error
-	if (strcmp(expectedEnd.name, eOCT_END_REQUESTS.name) != 0) {
-		OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "END flag not found");
-		return pool;
-	}
-
-	va_end(args);
-	return pool;
-}
-#pragma endregion
-
-#pragma region static
-static void iOCT_registry_registerComponent(eOCT_componentDescription* componentDesc) {
+#pragma region dataPattern registration
+void iOCT_registry_registerComponent(eOCT_componentDescription* componentDesc) {
 	OCT_index componentIndex;
 	eOCT_componentDescription* registryEntry = (eOCT_componentDescription*)eOCT_pool_addEntryNew(&iOCT_registry_inst.components, componentDesc, &componentIndex);	// store a stable copy in the registry
 	componentDesc->componentTypeIndex_reg = componentIndex;	// inform the system of its component's index
@@ -575,7 +270,7 @@ static void iOCT_registry_registerComponent(eOCT_componentDescription* component
 		OCT_ERROR_LOG(OCT_ERR_NOT_PROVIDED, "Ticket cache location not provided, component cannot be accessed without a ticket.");
 	}
 }
-static void iOCT_registry_registerDataPool(eOCT_dataPoolDescription* dataPoolDesc) {
+void iOCT_registry_registerDataPool(eOCT_dataPoolDescription* dataPoolDesc) {
 	OCT_index dataPoolIndex;
 	eOCT_dataPoolDescription* registryEntry;
 
@@ -597,7 +292,7 @@ static void iOCT_registry_registerDataPool(eOCT_dataPoolDescription* dataPoolDes
 		*dataPoolDesc->keyCacheLocation = key;
 	}
 }
-static void iOCT_registry_registerEvent(eOCT_eventDescription* eventDesc) {
+void iOCT_registry_registerEvent(eOCT_eventDescription* eventDesc) {
 	OCT_index eventIndex;
 	eOCT_eventDescription* registryEntry;
 
@@ -619,7 +314,7 @@ static void iOCT_registry_registerEvent(eOCT_eventDescription* eventDesc) {
 		*eventDesc->keyCacheLocation = key;
 	}
 }
-static void iOCT_registry_registerSingle(eOCT_singleDescription* singleDesc) {
+void iOCT_registry_registerSingle(eOCT_singleDescription* singleDesc) {
 	// assert(singleDesc->global && "Context local singles not yet implemented");
 	OCT_index singleIndex;
 	eOCT_singleDescription* registryEntry;
@@ -660,7 +355,7 @@ static bool iOCT_registry_findField(const char* fieldName, eOCT_fieldDescription
 	}
 	return false;
 }
-static OCT_index iOCT_registry_registerFields(eOCT_pool providedFields, OCT_ID systemID, OCT_index providerIndex, bool global) {
+OCT_index iOCT_registry_registerFields(eOCT_pool providedFields, OCT_ID systemID, OCT_index providerIndex, bool global) {
 	if (eOCT_pool_isEmpty(providedFields)) {
 		printf("%13c No public fields\n", ' ');
 		return 0;
@@ -678,7 +373,7 @@ static OCT_index iOCT_registry_registerFields(eOCT_pool providedFields, OCT_ID s
 	printf("%13c Fields: %zu\n", ' ', providedFields.count);
 	return fieldCtr;
 }
-static void iOCT_registry_registerField(eOCT_fieldDescription* field, OCT_index fieldNum, OCT_ID systemID, OCT_index providerIndex, bool global) {
+void iOCT_registry_registerField(eOCT_fieldDescription* field, OCT_index fieldNum, OCT_ID systemID, OCT_index providerIndex, bool global) {
 	printf("%02"PRIu64".%02zu.%02zu| %4cField: %-15s | ", systemID, providerIndex, fieldNum, ' ', field->name);
 
 	if (iOCT_registry_findField(field->name, NULL)) {	// check for duplicates
