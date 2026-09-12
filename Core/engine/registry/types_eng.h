@@ -1,4 +1,6 @@
 #pragma once
+
+#include "layout/types.h"
 /// <summary>
 /// Describes one system with its provided components, public fields, and requested fields. 
 /// Leave all _reg fields blank.
