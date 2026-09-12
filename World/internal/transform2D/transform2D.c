@@ -114,7 +114,8 @@ void iOCT_transform2D_generateRoot(OCT_local rootEntity) {
 
 // resolves local and global matrices
 void iOCT_transform2D_propagate(OCT_global context) {
-	eOCT_pool* transformPool = eOCT_component_getPool(context, iOCT_world_inst.transform2DKey);
+	// eOCT_pool* transformPool = eOCT_component_getPool(context, iOCT_world_inst.transform2DKey);
+	eOCT_pool* transformPool = iOCT_transform2D_getPool(context);
 	iOCT_transform2D* transformArray = (iOCT_transform2D*)transformPool->array;
 
 	if (!transformPool || !transformArray) {
@@ -144,7 +145,8 @@ void iOCT_transform2D_propagate(OCT_global context) {
 }
 
 static void iOCT_transform2D_printAll(OCT_global context) {
-	eOCT_pool* transformPool = eOCT_component_getPool(context, iOCT_world_inst.transform2DKey);
+	// eOCT_pool* transformPool = eOCT_component_getPool(context, iOCT_world_inst.transform2DKey);
+	eOCT_pool* transformPool = iOCT_transform2D_getPool(context);
 	iOCT_transform2D* transformArray = (iOCT_transform2D*)transformPool->array;
 
 	printf("TRANSFORMS:\n");

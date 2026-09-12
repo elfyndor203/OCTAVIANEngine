@@ -134,7 +134,8 @@ void iOCT_renderer_uploadAll(OCT_global contextHandle) {
 
     // Source
     // eOCT_pool* spritePool = eOCT_context_getComponentPool(contextHandle, iOCT_renderer_inst.sprite2DCache);
-    eOCT_pool* spritePool = eOCT_component_getPool(contextHandle, iOCT_renderer_inst.sprite2DKey);
+    // eOCT_pool* spritePool = eOCT_component_getPool(contextHandle, iOCT_renderer_inst.sprite2DKey);
+    eOCT_pool* spritePool = iOCT_sprite2D_getPool(contextHandle);
     iOCT_sprite2D* spriteArray = (iOCT_sprite2D*)spritePool->array;
     // Buffer
     eOCT_pool* spriteBufferPool = &iOCT_renderer_inst.spriteFullDataBuffer;
@@ -208,7 +209,8 @@ void iOCT_renderer_uploadAll(OCT_global contextHandle) {
 void iOCT_renderer_drawAll(OCT_global contextHandle) {
     eOCT_pool* windowPool = &iOCT_windowSystem_inst.windowMPool.pool;
     iOCT_window* windowArray = (iOCT_window*)windowPool->array;
-    eOCT_pool* spritePool = eOCT_component_getPool(contextHandle, iOCT_renderer_inst.sprite2DKey);
+    // eOCT_pool* spritePool = eOCT_component_getPool(contextHandle, iOCT_renderer_inst.sprite2DKey);
+    eOCT_pool* spritePool = iOCT_sprite2D_getPool(contextHandle);
     iOCT_sprite2D* spriteArray = (iOCT_sprite2D*)spritePool->array;
     bool screenSpace = eOCT_single_getLocal(iOCT_renderer_inst.screenSpaceKey, contextHandle)->boolean;
 

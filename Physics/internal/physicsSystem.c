@@ -53,7 +53,8 @@ void eOCT_PHYSICS_update(OCT_global context) {
 
     b2World_Step(worldID, 1.0f / 60.0f, 4);
 
-    eOCT_pool* physicsPool = eOCT_component_getPool(context, iOCT_physicsSystem_inst.physics2DKey);
+    // eOCT_pool* physicsPool = eOCT_component_getPool(context, iOCT_physicsSystem_inst.physics2DKey);
+    eOCT_pool* physicsPool = iOCT_physics2D_b2_getPool(context);
     iOCT_physics2D_b2* physicsArray = (iOCT_physics2D_b2*)physicsPool->array;
     eOCT_contextToken contextToken = eOCT_context_getToken(context);
     for (OCT_index physCtr = 0; physCtr < physicsPool->count; physCtr++) {
