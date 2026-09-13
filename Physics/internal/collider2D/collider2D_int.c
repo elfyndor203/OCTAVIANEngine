@@ -22,10 +22,10 @@ void iOCT_collider2D_callWatches(OCT_global context) {
         iOCT_collider2D colliderB = *iOCT_collider2D_get(context, colliderBHandle.objectID);
 
         if (colliderA.watchCollision) {
-            colliderA.callback(colliderAHandle, colliderBHandle, OCT_COLLISION_COLLIDED);
+            colliderA.callback(colliderAHandle, colliderBHandle, OCT_COLLISION_COLLIDED, colliderA.userData);
         }
         if (colliderB.watchCollision) {
-            colliderB.callback(colliderBHandle, colliderAHandle, OCT_COLLISION_COLLIDED);
+            colliderB.callback(colliderBHandle, colliderAHandle, OCT_COLLISION_COLLIDED, colliderB.userData);
         }
     }
 
@@ -38,10 +38,10 @@ void iOCT_collider2D_callWatches(OCT_global context) {
         iOCT_collider2D colliderB = *iOCT_collider2D_get(context, colliderBHandle.objectID);
 
         if (colliderA.watchCollision) {
-            colliderA.callback(colliderAHandle, colliderBHandle, OCT_COLLISION_EXITED);
+            colliderA.callback(colliderAHandle, colliderBHandle, OCT_COLLISION_EXITED, colliderA.userData);
         }
         if (colliderB.watchCollision) {
-            colliderB.callback(colliderBHandle, colliderAHandle, OCT_COLLISION_EXITED);
+            colliderB.callback(colliderBHandle, colliderAHandle, OCT_COLLISION_EXITED, colliderB.userData);
         }
     }
 }

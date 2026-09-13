@@ -82,7 +82,8 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
         .rotation = radians,
         .shape = shape,
         .watchCollision = false,
-        .callback = NULL
+        .callback = NULL,
+        .userData = NULL
     };
     OCT_local colliderHandle = {
         .contextHandle = entity.contextHandle,
@@ -96,7 +97,7 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
     return colliderHandle;
 }
 
-void OCT_collider2D_watch(OCT_local colliderHandle, OCT_collider2D_collisionCallback callback) {
+void OCT_collider2D_watch(OCT_local colliderHandle, OCT_collider2D_collisionCallback callback, void* userData) {
     if (!callback) {
         OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "Callback is NULL");
         return;
@@ -104,5 +105,6 @@ void OCT_collider2D_watch(OCT_local colliderHandle, OCT_collider2D_collisionCall
     iOCT_collider2D* collider = iOCT_collider2D_get(colliderHandle.contextHandle, colliderHandle.objectID);
     collider->watchCollision = true;
     collider->callback = callback;
+    collider->userData = userData;
 }
 

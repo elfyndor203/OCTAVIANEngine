@@ -18,10 +18,6 @@ add_library(Physics STATIC
         internal/collider2D/collider2D_int.h
         internal/constraints/distance2D.c
         internal/constraints/distance2D_int.h
-        internal/collisions/collisions_int.h
-        internal/collisions/collisions.c
-        internal/collisions/collisions_int.c
-        include/physics2D/collisions.h
         include/collider2D/collider2D.h
         internal/collider2D/collider2D_int.c
 )

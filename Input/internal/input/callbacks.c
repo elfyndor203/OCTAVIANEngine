@@ -11,14 +11,14 @@ void iOCT_input_keyCallback(OCT_index eventIndex) {
     bool pressed = *(bool*)eOCT_field_read(iOCT_inputSystem_inst.keyPressTicket, eventIndex, OCT_GLOBAL_NULL);
     bool released = *(bool*)eOCT_field_read(iOCT_inputSystem_inst.keyReleaseTicket, eventIndex, OCT_GLOBAL_NULL);
 
-    printf("Button ");
-    iOCT_input_printButton(button);
+    // printf("Button ");
+    // iOCT_input_printButton(button);
     if (pressed) {
-        printf(" pressed\n");
+        // printf(" pressed\n");
         iOCT_button_updateState(button, OCT_BUTTONSTATE_PRESSED);
     }
     if (released) {
-        printf(" released\n");
+        // printf(" released\n");
         iOCT_button_updateState(button, OCT_BUTTONSTATE_RELEASED);
     }
 

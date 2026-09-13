@@ -1,7 +1,6 @@
 #pragma once
 #include "collider2D/collider2D.h"
 #include "constraints/types_int.h"
-#include "physics2D/collisions.h"
 
 #include "OCT_Core_eng.h"
 #include <box2d/box2d.h>
@@ -20,6 +19,7 @@ struct iOCT_collider2D {
 
     bool watchCollision;
     OCT_collider2D_collisionCallback callback;
+    void* userData;
 };
 
 eOCT_DEFINE_DATAPOOL_LOCAL(iOCT_collider2D, iOCT_physicsSystem_inst.collider2DKey)
