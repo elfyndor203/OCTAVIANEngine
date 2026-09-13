@@ -14,7 +14,7 @@ OCT_BUTTON iOCT_getOCTButtonFromGLFW(int glfwKeyCode, bool mouse) {
 }
 
 OCT_vec2 OCT_cursor_readPosContext(OCT_global context) {
-    OCT_vec2* cursorPos = &eOCT_single_getLocal(iOCT_windowSystem_inst.cursorPosKey, context)->vec2;
+    OCT_vec2* cursorPos = iOCT_cursorPos_get(context);
     return *cursorPos;
 }
 
@@ -26,10 +26,10 @@ OCT_vec2 iOCT_cursor_calcPosContext(OCT_global context) {
     OCT_vec2 posWindow = focusedWindow->cursorPos;
 
     OCT_local contextRoot = OCT_entityContext_getRoot(context);
-    OCT_mat3 rootTransform = *(OCT_mat3*)eOCT_entity_getFieldOnce(contextRoot, iOCT_windowSystem_inst.transform2DTicket);
+    OCT_mat3 rootTransform = *iOCT_globalMatrix2D_getField(contextRoot);
     OCT_mat3 invRootTransform = OCT_mat3_inv(rootTransform);
     OCT_mat3 rootRelativeMat3;
-    if (eOCT_single_getLocal(iOCT_renderer_inst.screenSpaceKey, context)->boolean == false) {       // world space contexts
+    if (*iOCT_screenSpace_get(context) == false) {       // world space contexts
         OCT_mat3 screenToWorldMatrix = iOCT_window_screenToWorld(*focusedWindow);
         rootRelativeMat3 = OCT_mat3_mul(invRootTransform, screenToWorldMatrix);
     } else {                                                                                        // screen space contexts

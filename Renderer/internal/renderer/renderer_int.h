@@ -4,20 +4,14 @@
 #include "OCT_Core_eng.h"
 #include <glad/glad.h>
 
-#include "sprite2D/sprite2D_int.h"
-
 #define GL_CHECK() { GLenum err = glGetError(); if (err != GL_NO_ERROR) printf("GL error %d at line %d\n", err, __LINE__); }
 #define iOCT_SYSTEMTEX_DIMENSIONS ((OCT_vec2){100, 100})
 
-struct iOCT_spriteFullData {
-    iOCT_spriteData spriteData;
-    OCT_mat3 transform;
-};
 struct iOCT_renderer {
     // system information
     OCT_ID systemID;
 
-    eOCT_fieldTicket transform2DTicket;
+    eOCT_fieldTicket globalMatrix2DTicket;
     eOCT_fieldTicket windowVAOCache;
     eOCT_componentKey sprite2DKey;
     eOCT_componentKey camera2DKey;
@@ -46,6 +40,9 @@ struct iOCT_renderer {
 };
 
 extern iOCT_renderer iOCT_renderer_inst;
+
+eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(iOCT_globalMatrix2D, OCT_mat3, iOCT_renderer_inst.globalMatrix2DTicket)
+eOCT_DEFINE_SINGLE_LOCAL(iOCT_screenSpace, bool, iOCT_renderer_inst.screenSpaceKey)
 
 void system_init_RENDERER();
 

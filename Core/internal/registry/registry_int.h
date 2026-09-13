@@ -24,6 +24,10 @@ struct iOCT_registry {
 
 extern iOCT_registry iOCT_registry_inst;
 
-// eOCT_eventDescription iOCT_registry_findSourceEventDescription(eOCT_fieldRequest fieldRequest);
-// void iOCT_registerAllSystems(); // defined in build_manifest.c
-//void iOCT_allocateAllComponents();
+void iOCT_registry_registerComponent(eOCT_componentDescription* componentDesc);
+void iOCT_registry_registerEvent(eOCT_eventDescription* eventDesc);
+void iOCT_registry_registerDataPool(eOCT_dataPoolDescription* dataPoolDesc);
+void iOCT_registry_registerSingle(eOCT_singleDescription* singleDesc);
+
+void iOCT_registry_registerField(eOCT_fieldDescription* field, OCT_index fieldNum, OCT_ID systemID, OCT_index providerIndex, bool global);
+OCT_index iOCT_registry_registerFields(eOCT_pool providedFields, OCT_ID systemID, OCT_index providerIndex, bool global);

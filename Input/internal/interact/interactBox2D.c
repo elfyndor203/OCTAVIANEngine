@@ -12,5 +12,5 @@ void OCT_interactBox2D_attach(OCT_local entity, OCT_shape2 shape, OCT_index laye
         .layer = layer,
         .interactTime = 0
     };
-    eOCT_entity_attachComponent(entity, iOCT_inputSystem_inst.interactBoxKey, &newBox, NULL);
+    iOCT_interactBox2D_attach(entity, &newBox, NULL);
 }

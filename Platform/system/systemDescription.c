@@ -7,7 +7,7 @@
 void system_register_PLATFORM() {
     eOCT_fieldDescription time = {
         .name = "runningTime",
-        .type = eOCT_DATATYPE_DOUBLE64,
+        .type = eOCT_TYPE_DOUBLE64,
         .providerType = eOCT_DATAPATTERN_SINGLE,
         .offset = 0
     };
@@ -15,11 +15,11 @@ void system_register_PLATFORM() {
         .name = "time",
         .providedField = time,
         .global = true,
-        .keyCacheLocation = &iOCT_platformSystem_inst.timeTicket
+        .keyCacheLocation = &iOCT_platformSystem_inst.timeKey
     };
     eOCT_fieldDescription deltaTime = {
         .name = "deltaFrameTime",
-        .type = eOCT_DATATYPE_DOUBLE64,
+        .type = eOCT_TYPE_DOUBLE64,
         .providerType = eOCT_DATAPATTERN_SINGLE,
         .offset = 0
     };
@@ -27,7 +27,7 @@ void system_register_PLATFORM() {
         .name = "deltaTime",
         .providedField = deltaTime,
         .global = true,
-        .keyCacheLocation = &iOCT_platformSystem_inst.deltaTimeTicket
+        .keyCacheLocation = &iOCT_platformSystem_inst.deltaTimeKey
     };
 
     eOCT_systemDescription platformSystem = {

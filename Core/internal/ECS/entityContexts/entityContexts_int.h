@@ -6,6 +6,8 @@
 #include "events/events_int.h"
 
 #define iOCT_ROOT_ID 1
+#define iOCT_COMPONENT_UNSET 0xFF
+#define iOCT_ENTITY_ROOT_ID 1
 
 /// <summary>
 /// Opening an entityContext allows you to create entities that interact with each other. Each context manages its own pools and IDmap.
@@ -29,6 +31,12 @@ iOCT_entityContext* iOCT_entityContext_get(OCT_ID contextID);
 eOCT_pool* iOCT_context_getComponentPool(iOCT_entityContext* context, OCT_index componentIndex);
 eOCT_pool* iOCT_getDataPool(iOCT_entityContext* context, OCT_index dataPoolTypeIndex);
 void iOCT_entity_attachRootMeta(OCT_local entity);
+
+eOCT_pool iOCT_entityContext_initComponentPools();
+eOCT_pool iOCT_entityContext_initDataPools();
+eOCT_pool iOCT_entityContext_initSingles();
+OCT_local iOCT_entityContext_initRootEntity(iOCT_entityContext* context);
+void iOCT_entityContext_initSystems(OCT_global contextHandle);
 
 //void iOCT_entityContext_close(iOCT_entityContext* context);
 //void* iOCT_getByID(iOCT_entityContext* context, OCT_ID ID, OCT_ECSTypes componentType);

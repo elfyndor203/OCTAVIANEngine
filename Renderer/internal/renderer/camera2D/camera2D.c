@@ -22,7 +22,7 @@ void OCT_camera2D_attach(OCT_local entity, OCT_vec2 position, float rotation, OC
         .viewFrameSize = viewFrameSize,
         .cameraMatrix = OCT_mat3_generate(position, viewFrameSize, rotation)
     };
-    eOCT_entity_attachComponent(entity, iOCT_renderer_inst.camera2DKey, &newCamera, NULL);
+    iOCT_camera2D_attach(entity, &newCamera, NULL);
 }
 
 void OCT_camera2D_displayTo(OCT_local entity, OCT_global window) {
@@ -38,13 +38,14 @@ void OCT_camera2D_zoomBy(OCT_local entity, float factor) {
         iOCT_window* focusedWindow = eOCT_mappedPool_getByID(&iOCT_windowSystem_inst.windowMPool, iOCT_windowSystem_inst.focusedWindowID);
         entity = focusedWindow->activeCameraSourceEntity;
     }
-    iOCT_camera2D* camera = eOCT_entity_getComponent(entity, iOCT_renderer_inst.camera2DKey);
+    // iOCT_camera2D* camera = eOCT_component_get(entity, iOCT_renderer_inst.camera2DKey);
+    iOCT_camera2D* camera = iOCT_camera2D_get(entity);
 
     camera->zoom = factor;
     camera->cameraMatrix = OCT_mat3_scale(camera->cameraMatrix, (OCT_vec2){factor, factor});
 }
 
 void OCT_camera2D_makeContextScreenSpace(OCT_global context) {
-    bool* screenSpace = &eOCT_single_getLocal(iOCT_renderer_inst.screenSpaceKey, context)->boolean;
+    bool* screenSpace = iOCT_screenSpace_get(context);
     *screenSpace = true;
 }

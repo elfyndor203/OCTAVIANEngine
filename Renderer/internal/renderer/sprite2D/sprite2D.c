@@ -1,6 +1,5 @@
-#include "renderer/sprite2D.h"
-
 #include "sprite2D_int.h"
+#include "renderer/sprite2D.h"
 #include "renderer/types_int.h"
 
 #include "OCT_Core_eng.h"
@@ -9,8 +8,6 @@
 #include <inttypes.h>
 
 #include "renderer/renderer_int.h"
-#include "renderer/texture/textureGroup_int.h"
-#include "window/windowSystem_int.h"
 #include "renderer/colors.h"
 
 #define iOCT_LAYER_MAX (UINT32_MAX - 1)
@@ -33,29 +30,18 @@ void OCT_sprite2D_attach(OCT_local entity, OCT_global texture, OCT_vec4 uv, OCT_
             .dimensions = dimensions,
         }
     };
-    eOCT_entity_attachComponent(entity, iOCT_renderer_inst.sprite2DKey, &newSprite, NULL);
-    // iOCT_sprite2D* newSprite = eOCT_entity_attachComponent(entity, iOCT_renderer_inst.sprite2DKey);
-    // newSprite->entityHandle = entity;
-    // newSprite->texGroupID = texture.containerID;
-    // newSprite->texID = texture.objectID;
-    // newSprite->spriteTransform = OCT_mat3_identity;
-    // // resolve spriteData texArrayLayer at draw time
-    // newSprite->spriteData.uv = uv;
-    // newSprite->spriteData.color = tintColor;
-    // newSprite->spriteData.dimensions = dimensions;
-    // newSprite->sortKey = generateSortKey(drawLayer, texGroupIndex);
-
+    iOCT_sprite2D_attach(entity, &newSprite, NULL);
     printf("Attached sprite2D to entity %zu\n", entity.objectID);
 
     // iOCT_textureGroup* texGroup = (iOCT_textureGroup*)eOCT_getByID(&iOCT_renderer_inst.textureGroupMap, &iOCT_renderer_inst.textureGroupPool, texture.containerID);
 }
 
 void OCT_sprite2D_hide(OCT_local entity) {
-    iOCT_sprite2D* sprite = (iOCT_sprite2D*)eOCT_entity_getComponent(entity, iOCT_renderer_inst.sprite2DKey);
+    iOCT_sprite2D* sprite = iOCT_sprite2D_get(entity);
     sprite->visible = false;
 }
 void OCT_sprite2D_show(OCT_local entity) {
-    iOCT_sprite2D* sprite = (iOCT_sprite2D*)eOCT_entity_getComponent(entity, iOCT_renderer_inst.sprite2DKey);
+    iOCT_sprite2D* sprite = iOCT_sprite2D_get(entity);
     sprite->visible = true;
 }
 /// assumes layer and texGroup don't exceed 16 bit max, because it'd better not

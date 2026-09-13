@@ -8,6 +8,5 @@
 //
 // OCT_local OCT_hitbox2D_new_OLD(OCT_local entity, OCT_vec2 dimensions, OCT_vec2 position, float rotation);
 
-OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dimensions, OCT_vec2 origin, float radians, float density);
 OCT_local OCT_distance2D_constrain(OCT_local entityA, OCT_local entityB, OCT_vec2 anchorA, OCT_vec2 anchorB, float distance);
 OCT_local OCT_rope2D_constrain(OCT_local entityA, OCT_local entityB, OCT_vec2 anchorA, OCT_vec2 anchorB, float length);

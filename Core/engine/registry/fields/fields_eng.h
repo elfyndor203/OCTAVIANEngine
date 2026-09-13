@@ -1,9 +1,12 @@
 #pragma once
-#include "types_eng.h"
+#include "../types_eng.h"
 
-#include "dataTypes_eng.h"
+#include "../dataTypes_eng.h"
 #include "layout/types.h"
 #include "utilities/utilities_eng.h"
+
+#define eOCT_END_FIELDS ((eOCT_fieldDescription){.name = "FIELD_DESCRIPTION_END"})
+#define eOCT_END_REQUESTS ((eOCT_fieldRequest){.name = "FIELD_REQUEST_END"})
 
 struct eOCT_fieldDescription {
     const char* name;
@@ -46,4 +49,11 @@ struct eOCT_requestGroup {
     eOCT_dataPattern providerType;
     OCT_index providerIndex_reg;
 };
+
+eOCT_pool eOCT_generateFieldDescriptionPool(OCT_index total, eOCT_fieldDescription description1, ...);
+eOCT_pool eOCT_generateFieldRequestPool(OCT_index total, eOCT_fieldRequest request1, ...);
+
+eOCT_pool* eOCT_field_getSourcePool(OCT_global contextHandle, eOCT_fieldTicket fieldTicket);
+void* eOCT_field_read(eOCT_fieldTicket fieldTicket, OCT_index entryIndex, OCT_global contextHandle);
+
 

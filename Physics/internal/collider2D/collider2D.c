@@ -1,24 +1,25 @@
-#include "collider2D_int.h"
-#include "types_int.h"
+#include "collider2D/collider2D_int.h"
+#include "collider2D/collider2D.h"
+#include "constraints/types_int.h"
 
 #include <box2d/box2d.h>
 
 #include "physicsSystem_int.h"
-#include "../../../../cmake-build-debug/_deps/box2d-src/src/joint.h"
 #include "physics2D/physics2D_int.h"
 
 OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dimensions, OCT_vec2 origin, float radians, float density) {
     b2ShapeDef newShape = b2DefaultShapeDef();
     newShape.density = density; // not scaled
+    newShape.enableContactEvents = true;
 
-    OCT_mat3 globalTransform = *(OCT_mat3*)eOCT_entity_getFieldOnce(entity, iOCT_physicsSystem_inst.transform2DTicket);
+    OCT_mat3 globalTransform = *iOCT_globalMatrix2D_getField(entity);
 
     // figure out the transform of the target entity, relative to the PHYSICS BODY SOURCE, instead of the root
     bool foundPhysicsSourceEntity = false;
     OCT_local potentialPhysicsSourceEntity = entity;
     OCT_local physicsSourceEntity = OCT_LOCAL_NULL;
     while (!foundPhysicsSourceEntity) {
-        OCT_local parent = *(OCT_local*)eOCT_entity_getFieldOnce(potentialPhysicsSourceEntity, iOCT_physicsSystem_inst.transformParentTicket);
+        OCT_local parent = *iOCT_transformParent_getField(potentialPhysicsSourceEntity);
         if (eOCT_entity_isRoot(parent)) {
             foundPhysicsSourceEntity = true;
             physicsSourceEntity = potentialPhysicsSourceEntity;
@@ -26,14 +27,15 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
             potentialPhysicsSourceEntity = parent;
         }
     }
-    OCT_mat3 physicsSourceTransform = *(OCT_mat3*)eOCT_entity_getFieldOnce(physicsSourceEntity, iOCT_physicsSystem_inst.transform2DTicket);
+    // OCT_mat3 physicsSourceTransform = *iOCT_globalMatrix2D_getField(physicsSourceEntity);
+    OCT_mat3 physicsSourceTransform = *iOCT_globalMatrix2D_getField(physicsSourceEntity);
     OCT_mat3 invPhysicsSourceTransform = OCT_mat3_inv(physicsSourceTransform);
-    OCT_mat3 targetEntityTransform = *(OCT_mat3*)eOCT_entity_getFieldOnce(entity, iOCT_physicsSystem_inst.transform2DTicket);
+    OCT_mat3 targetEntityTransform = *iOCT_globalMatrix2D_getField(entity);
     OCT_mat3 targetToPhysicsSourceTransform = OCT_mat3_mul(invPhysicsSourceTransform, targetEntityTransform);
     OCT_vec2 relativeOrigin = OCT_mat3_getTranslation(targetToPhysicsSourceTransform);
     float relativeRadians = OCT_mat3_getRotation(targetToPhysicsSourceTransform);
 
-    iOCT_physics2D_b2* physics = eOCT_entity_getComponent(physicsSourceEntity, iOCT_physicsSystem_inst.physics2DKey);
+    iOCT_physics2D_b2* physics = iOCT_physics2D_b2_get(physicsSourceEntity);
     b2BodyId entityBodyID = physics->b2dBodyID;
 
     OCT_vec2 dimensionsMeters = OCT_vec2_div(dimensions, iOCT_physicsSystem_inst.unitsPerB2Meter);
@@ -78,14 +80,31 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
         .dimensions = dimensions,
         .origin = origin,
         .rotation = radians,
-        .shape = shape
+        .shape = shape,
+        .watchCollision = false,
+        .callback = NULL,
+        .userData = NULL
     };
     OCT_local colliderHandle = {
         .contextHandle = entity.contextHandle,
         .containerID = OCT_ID_NULL
     };
-    eOCT_mappedPool* colliderPool = eOCT_dataPool_getLocal(iOCT_physicsSystem_inst.collider2DKey, entity.contextHandle);
-    eOCT_mappedPool_addEntry(colliderPool, &newCollider, &colliderHandle.objectID, NULL);
+
+    iOCT_collider2D_new(entity.contextHandle, &newCollider, &colliderHandle.objectID, NULL);
+    OCT_local* handleCache = eOCT_pool_addEntryNew(&iOCT_physicsSystem_inst.handleCacheForB2UserData, &colliderHandle, NULL);       // store the handle in a stable spot for accessing colliders later
+    b2Shape_SetUserData(newShapeID, handleCache);
 
     return colliderHandle;
 }
+
+void OCT_collider2D_watch(OCT_local colliderHandle, OCT_collider2D_collisionCallback callback, void* userData) {
+    if (!callback) {
+        OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "Callback is NULL");
+        return;
+    }
+    iOCT_collider2D* collider = iOCT_collider2D_get(colliderHandle.contextHandle, colliderHandle.objectID);
+    collider->watchCollision = true;
+    collider->callback = callback;
+    collider->userData = userData;
+}
+

@@ -11,7 +11,8 @@ struct iOCT_physicsSystem {
     eOCT_componentKey physics2DKey;
     eOCT_dataPoolKey distance2DKey;
     eOCT_dataPoolKey collider2DKey;
-    eOCT_fieldTicket transform2DTicket;
+    eOCT_dataPoolKey collisionWatchKey;
+    eOCT_fieldTicket globalMatrix2DTicket;
     eOCT_fieldTicket position2DTicket;
     eOCT_fieldTicket rotationTicket;
     eOCT_fieldTicket transformParentTicket;
@@ -23,9 +24,16 @@ struct iOCT_physicsSystem {
     OCT_index constraintSolveIterations;
 
     float unitsPerB2Meter;
+
+    eOCT_pool handleCacheForB2UserData;
 };
 
 extern iOCT_physicsSystem iOCT_physicsSystem_inst;
+
+eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(iOCT_globalMatrix2D, OCT_mat3, iOCT_physicsSystem_inst.globalMatrix2DTicket)
+eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(iOCT_transformParent, OCT_local, iOCT_physicsSystem_inst.transformParentTicket)
+
+eOCT_DEFINE_SINGLE_LOCAL(iOCT_box2DWorldID, b2WorldId, iOCT_physicsSystem_inst.box2DWorldKey)
 
 void iOCT_physicsSystem_init();
 void iOCT_physicsSystem_contextSetup(OCT_global context);
