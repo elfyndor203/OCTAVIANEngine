@@ -17,9 +17,9 @@
     } \
 
 
-#define eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(fieldName, fieldType, ticketHolder, ticketHolderMember)\
+#define eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(fieldName, fieldType, fieldTicket)\
     static inline fieldType* fieldName##_getField(OCT_local entityHandle) { \
-    return (fieldType*)eOCT_component_getField(entityHandle, ticketHolder.ticketHolderMember); \
+    return (fieldType*)eOCT_component_getField(entityHandle, fieldTicket); \
     }
 
 struct eOCT_componentDescription {
