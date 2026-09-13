@@ -32,10 +32,10 @@
 //     eOCT_mappedPool* ropeMPool = eOCT_dataPool_getLocal(iOCT_physicsSystem_inst.distance2DKey, rope2D.contextHandle);
 //     iOCT_rope2D* rope = (iOCT_rope2D*)eOCT_mappedPool_getByID(ropeMPool, rope2D.objectID);
 //
-//     iOCT_physics2D_oct* physA = eOCT_entity_getComponent(rope->entityA, iOCT_physicsSystem_inst.physics2DKey);
-//     iOCT_physics2D_oct* physB = eOCT_entity_getComponent(rope->entityB, iOCT_physicsSystem_inst.physics2DKey);
-//     OCT_vec2* posA = (OCT_vec2*)eOCT_entity_getField(rope->entityA, iOCT_physicsSystem_inst.position2DTicket);
-//     OCT_vec2* posB = (OCT_vec2*)eOCT_entity_getField(rope->entityB, iOCT_physicsSystem_inst.position2DTicket);
+//     iOCT_physics2D_oct* physA = eOCT_component_get(rope->entityA, iOCT_physicsSystem_inst.physics2DKey);
+//     iOCT_physics2D_oct* physB = eOCT_component_get(rope->entityB, iOCT_physicsSystem_inst.physics2DKey);
+//     OCT_vec2* posA = (OCT_vec2*)eOCT_component_getField(rope->entityA, iOCT_physicsSystem_inst.position2DTicket);
+//     OCT_vec2* posB = (OCT_vec2*)eOCT_component_getField(rope->entityB, iOCT_physicsSystem_inst.position2DTicket);
 //
 //     OCT_vec2 toMovePos;
 //     OCT_vec2 centerPos;
@@ -99,13 +99,13 @@
 //     if (!rope.enabled) {
 //         return;
 //     }
-//     // iOCT_physics2D* physA = eOCT_entity_getComponent(contextToken, constraint.entityA, iOCT_physicsSystem_inst.physics2DKey);
-//     // iOCT_physics2D* physB = eOCT_entity_getComponent(contextToken, constraint.entityB, iOCT_physicsSystem_inst.physics2DKey);
-//     iOCT_physics2D_oct* physA = eOCT_entity_getComponent(rope.entityA, iOCT_physicsSystem_inst.physics2DKey);
-//     iOCT_physics2D_oct* physB = eOCT_entity_getComponent(rope.entityB, iOCT_physicsSystem_inst.physics2DKey);
+//     // iOCT_physics2D* physA = eOCT_component_get(contextToken, constraint.entityA, iOCT_physicsSystem_inst.physics2DKey);
+//     // iOCT_physics2D* physB = eOCT_component_get(contextToken, constraint.entityB, iOCT_physicsSystem_inst.physics2DKey);
+//     iOCT_physics2D_oct* physA = eOCT_component_get(rope.entityA, iOCT_physicsSystem_inst.physics2DKey);
+//     iOCT_physics2D_oct* physB = eOCT_component_get(rope.entityB, iOCT_physicsSystem_inst.physics2DKey);
 //
-//     OCT_vec2* posA = (OCT_vec2*)eOCT_entity_getFieldByToken(contextToken, rope.entityA, iOCT_physicsSystem_inst.position2DTicket);
-//     OCT_vec2* posB = (OCT_vec2*)eOCT_entity_getFieldByToken(contextToken, rope.entityB, iOCT_physicsSystem_inst.position2DTicket);
+//     OCT_vec2* posA = (OCT_vec2*)eOCT_component_getFieldByToken(contextToken, rope.entityA, iOCT_physicsSystem_inst.position2DTicket);
+//     OCT_vec2* posB = (OCT_vec2*)eOCT_component_getFieldByToken(contextToken, rope.entityB, iOCT_physicsSystem_inst.position2DTicket);
 //
 //     float distance = OCT_vec2_mag(OCT_vec2_sub(*posB, *posA));
 //

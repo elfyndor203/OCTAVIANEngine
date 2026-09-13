@@ -30,21 +30,8 @@ bool OCT_transform2D_attach(OCT_local entity, OCT_local parentEntity) {
 		.depth = parentTransform.depth + 1
 	};
 
-	iOCT_transform2D* transformLoc = eOCT_entity_attachComponent(entity, iOCT_world_inst.transform2DKey, &transform, &index);
+	iOCT_transform2D_attach(entity, &transform, &index);
 	printf("\nAttached at index %zu\n", index);
-	// iOCT_transform2D* transformLoc = (iOCT_transform2D*)eOCT_entity_attachComponentSorted(entity, iOCT_world_inst.transform2DKey, parentTransform.depth + 1);
-	// transformLoc->entityHandle = entity;
-	// transformLoc->parentEntityHandle = parentEntity;
-	// transformLoc->position = OCT_vec2_zero;
-	// transformLoc->rotation = 0.0f;
-	// transformLoc->scale = (OCT_vec2){1.0f, 1.0f};
-	// transformLoc->localMatrix = OCT_mat3_identity;
-	// transformLoc->globalMatrix = parentTransform.globalMatrix;
-	// transformLoc->depth = parentTransform.depth + 1;
-
-	// printf("Attached transform with depth %zu\n", transformLoc->depth);
-
-	// iOCT_transform2D_printAll(entity.contextHandle);
 	return true;
 }
 
@@ -108,13 +95,13 @@ void iOCT_transform2D_generateRoot(OCT_local rootEntity) {
 		.globalMatrix = OCT_mat3_identity,
 		.depth = iOCT_TRANSFORM_ROOT_DEPTH
 	};
-	eOCT_entity_attachComponent(rootEntity, iOCT_world_inst.transform2DKey, &rootTransform, NULL);
-
+	iOCT_transform2D_attach(rootEntity, &rootTransform, NULL);
 }
 
 // resolves local and global matrices
 void iOCT_transform2D_propagate(OCT_global context) {
-	eOCT_pool* transformPool = eOCT_component_getPool(context, iOCT_world_inst.transform2DKey);
+	// eOCT_pool* transformPool = eOCT_component_getPool(context, iOCT_world_inst.transform2DKey);
+	eOCT_pool* transformPool = iOCT_transform2D_getPool(context);
 	iOCT_transform2D* transformArray = (iOCT_transform2D*)transformPool->array;
 
 	if (!transformPool || !transformArray) {
@@ -144,7 +131,8 @@ void iOCT_transform2D_propagate(OCT_global context) {
 }
 
 static void iOCT_transform2D_printAll(OCT_global context) {
-	eOCT_pool* transformPool = eOCT_component_getPool(context, iOCT_world_inst.transform2DKey);
+	// eOCT_pool* transformPool = eOCT_component_getPool(context, iOCT_world_inst.transform2DKey);
+	eOCT_pool* transformPool = iOCT_transform2D_getPool(context);
 	iOCT_transform2D* transformArray = (iOCT_transform2D*)transformPool->array;
 
 	printf("TRANSFORMS:\n");

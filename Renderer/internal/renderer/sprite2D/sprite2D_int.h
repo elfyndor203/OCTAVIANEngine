@@ -32,5 +32,5 @@ struct iOCT_sprite2D {
     iOCT_spriteData spriteData;
 };
 
-eOCT_DEFINE_COMPONENT_ACCESSOR(iOCT_sprite2D, iOCT_renderer_inst, sprite2DKey)
+eOCT_DEFINE_COMPONENT(iOCT_sprite2D, iOCT_renderer_inst.sprite2DKey)
 void iOCT_sprite2D_root(OCT_local rootEntity);

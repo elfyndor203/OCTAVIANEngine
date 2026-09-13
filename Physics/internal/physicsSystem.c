@@ -37,7 +37,7 @@ void iOCT_physicsSystem_contextSetup(OCT_global context) {
     b2WorldDef worldDef = b2DefaultWorldDef();
     worldDef.gravity = iOCT_toB2Vec2(OCT_vec2_div(iOCT_physicsSystem_inst.worldGravity, iOCT_physicsSystem_inst.unitsPerB2Meter));
     b2WorldId worldID = b2CreateWorld(&worldDef);
-    b2WorldId* worldSingle = (b2WorldId*)eOCT_single_getLocal(iOCT_physicsSystem_inst.box2DWorldKey, context);
+    b2WorldId* worldSingle = iOCT_box2DWorldID_get(context);
     *worldSingle = worldID;
 
     // b2BodyDef groundBodyDef = b2DefaultBodyDef();
@@ -49,18 +49,19 @@ void iOCT_physicsSystem_contextSetup(OCT_global context) {
 }
 
 void eOCT_PHYSICS_update(OCT_global context) {
-    b2WorldId worldID = *(b2WorldId*)eOCT_single_getLocal(iOCT_physicsSystem_inst.box2DWorldKey, context);
+    b2WorldId worldID = *iOCT_box2DWorldID_get(context);
 
     b2World_Step(worldID, 1.0f / 60.0f, 4);
 
-    eOCT_pool* physicsPool = eOCT_component_getPool(context, iOCT_physicsSystem_inst.physics2DKey);
+    // eOCT_pool* physicsPool = eOCT_component_getPool(context, iOCT_physicsSystem_inst.physics2DKey);
+    eOCT_pool* physicsPool = iOCT_physics2D_b2_getPool(context);
     iOCT_physics2D_b2* physicsArray = (iOCT_physics2D_b2*)physicsPool->array;
     eOCT_contextToken contextToken = eOCT_context_getToken(context);
     for (OCT_index physCtr = 0; physCtr < physicsPool->count; physCtr++) {
         iOCT_physics2D_b2* physics = &physicsArray[physCtr];
 
-        OCT_vec2* position = (OCT_vec2*)eOCT_entity_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.position2DTicket);    // __NOTE__ THESE ARE LOCAL POSITIONS, NOT GLOBAL
-        float* rotation = (float*)eOCT_entity_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.rotationTicket);
+        OCT_vec2* position = (OCT_vec2*)eOCT_component_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.position2DTicket);    // __NOTE__ THESE ARE LOCAL POSITIONS, NOT GLOBAL
+        float* rotation = (float*)eOCT_component_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.rotationTicket);
         b2Vec2 newPos = b2Body_GetPosition(physics->b2dBodyID);
         float newRot = b2Rot_GetAngle(b2Body_GetRotation(physics->b2dBodyID));
 
@@ -79,8 +80,8 @@ void eOCT_PHYSICS_update(OCT_global context) {
 //         if (physics->fixed) {
 //             continue;
 //         }
-//         OCT_vec2* position = (OCT_vec2*)eOCT_entity_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.position2DTicket);    // __NOTE__ THESE ARE LOCAL POSITIONS, NOT GLOBAL
-//         float* rotation = (float*)eOCT_entity_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.rotationTicket);
+//         OCT_vec2* position = (OCT_vec2*)eOCT_component_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.position2DTicket);    // __NOTE__ THESE ARE LOCAL POSITIONS, NOT GLOBAL
+//         float* rotation = (float*)eOCT_component_getFieldByToken(contextToken, physics->entityHandle, iOCT_physicsSystem_inst.rotationTicket);
 //         physics->prevPos = *position;
 //         // iOCT_physics2D_integrateEuler(physics, position, rotation, iOCT_physicsSystem_inst.dt);
 //     }

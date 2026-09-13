@@ -33,6 +33,6 @@ struct iOCT_physics2D_b2 {
     float maxSpeedY;
 };
 
-eOCT_DEFINE_COMPONENT_ACCESSOR(iOCT_physics2D_b2, iOCT_physicsSystem_inst, physics2DKey)
+eOCT_DEFINE_COMPONENT(iOCT_physics2D_b2, iOCT_physicsSystem_inst.physics2DKey)
 void iOCT_physics2D_integrateEulerOld(iOCT_physics2D_oct* physics2D, OCT_vec2* position, float* rotation, float dt);
 void iOCT_physics2D_conserveL(iOCT_physics2D_oct* center, iOCT_physics2D_oct* target, float originalDistance, float newDistance);

@@ -36,4 +36,6 @@ struct iOCT_windowSystem {
 extern iOCT_windowSystem iOCT_windowSystem_inst;
 extern OCT_BUTTON iOCT_glfwToOCTButtonKeyMap[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_LAST + 2];
 
+eOCT_DEFINE_SINGLE_LOCAL(iOCT_cursorPos, OCT_vec2, iOCT_windowSystem_inst.cursorPosKey)
+
 void system_init_WINDOW();

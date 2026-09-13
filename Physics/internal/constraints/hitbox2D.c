@@ -23,7 +23,7 @@
 //         .objectID = newBox.hitboxID
 //     };
 //
-//     iOCT_physics2D_oct* phys = eOCT_entity_getComponent(newBox.entity, iOCT_physicsSystem_inst.physics2DKey);
+//     iOCT_physics2D_oct* phys = eOCT_component_get(newBox.entity, iOCT_physicsSystem_inst.physics2DKey);
 //     phys->inertia += phys->mass + (dimensions.x * dimensions.x) + (dimensions.y * dimensions.y) / 12.0f;
 //
 //     return newHandle;
@@ -34,13 +34,13 @@
 //         return false;
 //     }
 //
-//     iOCT_physics2D_oct* physA = eOCT_entity_getComponent(hitboxA.entity, iOCT_physicsSystem_inst.physics2DKey);
-//     iOCT_physics2D_oct* physB = eOCT_entity_getComponent(hitboxB.entity, iOCT_physicsSystem_inst.physics2DKey);
+//     iOCT_physics2D_oct* physA = eOCT_component_get(hitboxA.entity, iOCT_physicsSystem_inst.physics2DKey);
+//     iOCT_physics2D_oct* physB = eOCT_component_get(hitboxB.entity, iOCT_physicsSystem_inst.physics2DKey);
 //
-//     OCT_vec2* posA = (OCT_vec2*)eOCT_entity_getField(hitboxA.entity, iOCT_physicsSystem_inst.position2DTicket);
-//     OCT_vec2* posB = (OCT_vec2*)eOCT_entity_getField(hitboxB.entity, iOCT_physicsSystem_inst.position2DTicket);
-//     float* rotationA = (float*)eOCT_entity_getField(hitboxA.entity, iOCT_physicsSystem_inst.rotationTicket);
-//     float* rotationB = (float*)eOCT_entity_getField(hitboxA.entity, iOCT_physicsSystem_inst.rotationTicket);
+//     OCT_vec2* posA = (OCT_vec2*)eOCT_component_getField(hitboxA.entity, iOCT_physicsSystem_inst.position2DTicket);
+//     OCT_vec2* posB = (OCT_vec2*)eOCT_component_getField(hitboxB.entity, iOCT_physicsSystem_inst.position2DTicket);
+//     float* rotationA = (float*)eOCT_component_getField(hitboxA.entity, iOCT_physicsSystem_inst.rotationTicket);
+//     float* rotationB = (float*)eOCT_component_getField(hitboxA.entity, iOCT_physicsSystem_inst.rotationTicket);
 //     OCT_mat3* transformA = iOCT_globalMatrix2D_getField(hitboxA.entity);
 //     OCT_mat3* transformB = iOCT_globalMatrix2D_getField(hitboxB.entity);
 //

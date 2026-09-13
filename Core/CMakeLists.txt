@@ -1,9 +1,6 @@
 
 add_library(Core STATIC
         internal/layout/layout.c
-        internal/layout/dataAccess.c
-        engine/registry/dataAccess_Eng.h
-        engine/data/types_eng.h
 
         internal/utilities/utilities_int.h
         internal/utilities/IDMap.c
@@ -20,9 +17,9 @@ add_library(Core STATIC
         include/math/vectors/vec2.c
         include/math/shapes/rect2.c
 
-        internal/ECS/entity.c
+        internal/ECS/entities/entities_int.c
         internal/ECS/ECS.c
-        internal/ECS/entityContext.c
+        internal/ECS/entityContexts/entityContexts.c
 
         internal/registry/registry.c
 
@@ -60,11 +57,27 @@ add_library(Core STATIC
         internal/utilities/allocations.c
         include/utilities/memory.h
         init/Core_shutdown.h
-        engine/registry/fields_eng.h
+        engine/registry/fields/fields_eng.h
         engine/registry/dataTypes_eng.h
-        engine/registry/dataPatterns_eng.h
         internal/events/pubEvents.c
         internal/events/pubEvents_int.h
+        engine/ECS/dataPatterns/components_eng.h
+        engine/ECS/dataPatterns/dataPools_eng.h
+        engine/ECS/dataPatterns/events_eng.h
+        engine/ECS/dataPatterns/singles_eng.h
+        internal/ECS/dataPatterns/components/components_eng.c
+        internal/ECS/dataPatterns/dataPools/dataPools_eng.c
+        internal/ECS/dataPatterns/events/events_eng.c
+        internal/ECS/singles/singles_eng.c
+        internal/registry/fields/fields_eng.c
+        engine/registry/system/systems_eng.h
+        engine/registry/system/systems.c
+        internal/ECS/dataPatterns/components/components_int.h
+        internal/ECS/dataPatterns/components/components_int.c
+        internal/ECS/entities/entities_eng.c
+        internal/ECS/entities/entities.c
+        internal/ECS/entityContexts/entityContexts_eng.c
+        internal/ECS/entityContexts/entityContext_int.c
 )
 
 target_include_directories(Core

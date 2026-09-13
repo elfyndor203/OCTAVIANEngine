@@ -30,18 +30,7 @@ void OCT_sprite2D_attach(OCT_local entity, OCT_global texture, OCT_vec4 uv, OCT_
             .dimensions = dimensions,
         }
     };
-    eOCT_entity_attachComponent(entity, iOCT_renderer_inst.sprite2DKey, &newSprite, NULL);
-    // iOCT_sprite2D* newSprite = eOCT_entity_attachComponent(entity, iOCT_renderer_inst.sprite2DKey);
-    // newSprite->entityHandle = entity;
-    // newSprite->texGroupID = texture.containerID;
-    // newSprite->texID = texture.objectID;
-    // newSprite->spriteTransform = OCT_mat3_identity;
-    // // resolve spriteData texArrayLayer at draw time
-    // newSprite->spriteData.uv = uv;
-    // newSprite->spriteData.color = tintColor;
-    // newSprite->spriteData.dimensions = dimensions;
-    // newSprite->sortKey = generateSortKey(drawLayer, texGroupIndex);
-
+    iOCT_sprite2D_attach(entity, &newSprite, NULL);
     printf("Attached sprite2D to entity %zu\n", entity.objectID);
 
     // iOCT_textureGroup* texGroup = (iOCT_textureGroup*)eOCT_getByID(&iOCT_renderer_inst.textureGroupMap, &iOCT_renderer_inst.textureGroupPool, texture.containerID);
