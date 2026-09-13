@@ -29,8 +29,8 @@ OCT_local OCT_distance2D_constrain(OCT_local entityA, OCT_local entityB, OCT_vec
         .contextHandle = entityA.contextHandle,
         .containerID = OCT_ID_NULL
     };
-    eOCT_mappedPool* distancePool = eOCT_dataPool_getLocal(iOCT_physicsSystem_inst.distance2DKey, entityA.contextHandle);
-    eOCT_mappedPool_addEntry(distancePool, &distance2D, &distanceHandle.objectID, NULL);
+
+    iOCT_distance2D_new(entityA.contextHandle, &distance2D, &distanceHandle.objectID, NULL);
     return distanceHandle;
 }
 
@@ -62,7 +62,6 @@ OCT_local OCT_rope2D_constrain(OCT_local entityA, OCT_local entityB, OCT_vec2 an
         .contextHandle = entityA.contextHandle,
         .containerID = OCT_ID_NULL
     };
-    eOCT_mappedPool* distancePool = eOCT_dataPool_getLocal(iOCT_physicsSystem_inst.distance2DKey, entityA.contextHandle);
-    eOCT_mappedPool_addEntry(distancePool, &distance2D, &ropeHandle.objectID, NULL);
+    iOCT_distance2D_new(entityA.contextHandle, &distance2D, &ropeHandle.objectID, NULL);
     return ropeHandle;
 }

@@ -9,7 +9,7 @@
 
 #include "registry/registry_int.h"
 #include "ECS/ECS_int.h"
-#include "ECS/entityContext_int.h"
+#include "ECS/entityContexts/entityContexts_int.h"
 #include "utilities/utilities_eng.h"
 #include "layout/systems.h"
 #include "scheduler/scheduler_int.h"

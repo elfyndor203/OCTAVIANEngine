@@ -4,7 +4,7 @@
 
 #include "registry/registry_int.h"
 #include "layout/types.h"
-#include "ECS/entityContext_int.h"
+#include "ECS/entityContexts/entityContexts_int.h"
 #include "ECS/types_eng.h"
 #include "ECS/ECS_int.h"
 #include "globals/globals_int.h"

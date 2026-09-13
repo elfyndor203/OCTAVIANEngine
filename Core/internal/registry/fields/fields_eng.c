@@ -1,4 +1,4 @@
-#include "fields_eng.h"
+#include "../../../engine/registry/fields/fields_eng.h"
 
 #include "registry/registry_eng.h"
 
@@ -10,7 +10,7 @@
 #include <stdarg.h>
 
 #include "ECS/ECS_int.h"
-#include "ECS/entityContext_int.h"
+#include "ECS/entityContexts/entityContexts_int.h"
 #include "utilities/utilities_eng.h"
 #include "layout/systems.h"
 

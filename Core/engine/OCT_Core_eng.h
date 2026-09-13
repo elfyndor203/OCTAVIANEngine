@@ -17,10 +17,10 @@
 #include "ECS/entity_eng.h"
 #include "ECS/ECS_eng.h"
 #include "ECS/types_eng.h"
-#include "ECS/components/components_eng.h"
-#include "ECS/dataPools/dataPools_eng.h"
-#include "ECS/events/events_eng.h"
-#include "ECS/singles/singles_eng.h"
+#include "ECS/dataPatterns/components_eng.h"
+#include "ECS/dataPatterns/dataPools_eng.h"
+#include "ECS/dataPatterns/events_eng.h"
+#include "ECS/dataPatterns/singles_eng.h"
 
 #include "globals/globals_eng.h"
 

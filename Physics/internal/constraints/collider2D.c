@@ -85,8 +85,7 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
         .contextHandle = entity.contextHandle,
         .containerID = OCT_ID_NULL
     };
-    eOCT_mappedPool* colliderPool = eOCT_dataPool_getLocal(iOCT_physicsSystem_inst.collider2DKey, entity.contextHandle);
-    eOCT_mappedPool_addEntry(colliderPool, &newCollider, &colliderHandle.objectID, NULL);
 
+    iOCT_collider2D_new(entity.contextHandle, &newCollider, &colliderHandle.objectID, NULL);
     return colliderHandle;
 }

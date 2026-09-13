@@ -10,7 +10,7 @@
 #include <stdarg.h>
 
 #include "ECS/ECS_int.h"
-#include "ECS/entityContext_int.h"
+#include "ECS/entityContexts/entityContexts_int.h"
 #include "utilities/utilities_eng.h"
 #include "layout/systems.h"
 #include "scheduler/scheduler_int.h"
@@ -188,14 +188,14 @@ void init_OCT_registry_summary() {
 
 	printf("\nRequest grouping status:\n");
 	for (OCT_index groupCtr = 0; groupCtr < iOCT_registry_inst.fieldGroups_free.count; groupCtr++) {
-		eOCT_fieldRequest* request = eOCT_pool_access(&iOCT_registry_inst.fieldGroups_free, groupCtr, 0);
-		if (request->groupStatus_reg == GROUP_SUCCESS) {
+		eOCT_fieldRequest* requestPtr = eOCT_pool_access(&iOCT_registry_inst.fieldGroups_free, groupCtr, 0);
+		if (requestPtr->groupStatus_reg == GROUP_SUCCESS) {
 			printf("Success | ");
-			printf("Group: %s | ", request->groupName_opt);
+			printf("Group: %s | ", requestPtr->groupName_opt);
 		} else {
 			printf("Failed: ");
 		}
-		printf("Field: %s\n", request->name);
+		printf("Field: %s\n", requestPtr->name);
 	}
 
 	printf("\nStatus: ");
@@ -248,8 +248,6 @@ void init_OCT_registry_cleanup() {
 	eOCT_pool_free(&iOCT_registry_inst.fieldGroups_free);
 }
 #pragma endregion
-
-
 
 #pragma region dataPattern registration
 void iOCT_registry_registerComponent(eOCT_componentDescription* componentDesc) {
@@ -337,24 +335,7 @@ void iOCT_registry_registerSingle(eOCT_singleDescription* singleDesc) {
 		*singleDesc->keyCacheLocation = key;
 	}
 }
-static bool iOCT_registry_findField(const char* fieldName, eOCT_fieldDescription* fieldOut) {
-	eOCT_pool* fields = &iOCT_registry_inst.fields;
-	//printf("Number of fields in registry: %d\n", fields->count);
-	eOCT_fieldDescription* fieldArray = (eOCT_fieldDescription*)fields->array;
-	eOCT_fieldDescription targetField;
-	int fieldCtr = 0;
 
-	for (fieldCtr = 0; fieldCtr < fields->count; fieldCtr++) {		// check every field in the registry
-		targetField = fieldArray[fieldCtr];
-		if (strcmp(targetField.name, fieldName) == 0 && targetField.providerType == targetField.providerType) {
-			if (fieldOut) {
-				*fieldOut = targetField;
-			}
-			return true;
-		}
-	}
-	return false;
-}
 OCT_index iOCT_registry_registerFields(eOCT_pool providedFields, OCT_ID systemID, OCT_index providerIndex, bool global) {
 	if (eOCT_pool_isEmpty(providedFields)) {
 		printf("%13c No public fields\n", ' ');
@@ -390,14 +371,27 @@ void iOCT_registry_registerField(eOCT_fieldDescription* field, OCT_index fieldNu
 		printf("Success\n");
 	}
 }
+#pragma endregion
 
-// static bool iOCT_registry_validateComponent(eOCT_componentDescription component) {
-// 	if (
-// 		!component.keyCacheLocation ||
-// 		!component.stride ||
-// 		!component.entityHandleValueOffset ||
-// 		(component.sort && component.sortValueOffset > ))
-// }
+#pragma region helpers
+static bool iOCT_registry_findField(const char* fieldName, eOCT_fieldDescription* fieldOut) {
+	eOCT_pool* fields = &iOCT_registry_inst.fields;
+	//printf("Number of fields in registry: %d\n", fields->count);
+	eOCT_fieldDescription* fieldArray = (eOCT_fieldDescription*)fields->array;
+	eOCT_fieldDescription targetField;
+	int fieldCtr = 0;
+
+	for (fieldCtr = 0; fieldCtr < fields->count; fieldCtr++) {		// check every field in the registry
+		targetField = fieldArray[fieldCtr];
+		if (strcmp(targetField.name, fieldName) == 0 && targetField.providerType == targetField.providerType) {
+			if (fieldOut) {
+				*fieldOut = targetField;
+			}
+			return true;
+		}
+	}
+	return false;
+}
 // fills in global pools for global events
 static void iOCT_registry_buildGlobalKeys() {
 	eOCT_pool systemPool = iOCT_registry_inst.systems_free;
@@ -482,7 +476,6 @@ static void iOCT_registry_distributeFields() {
 		}
 	}
 }
-
 static void iOCT_registry_checkGroups() {
 	eOCT_pool* grouped = &iOCT_registry_inst.fieldGroups_free;
 
@@ -522,7 +515,6 @@ static void iOCT_registry_checkGroups() {
 		request->groupStatus_reg = groupStatus;
 	}
 }
-
 static eOCT_pool* iOCT_registry_findGlobalPool(eOCT_fieldDescription field) {
 	if (!field.global_reg) {
 		return NULL;
@@ -547,6 +539,6 @@ static eOCT_pool* iOCT_registry_findGlobalPool(eOCT_fieldDescription field) {
 
 	return pool;
 }
-
 #pragma endregion
+
 

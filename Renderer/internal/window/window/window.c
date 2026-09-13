@@ -107,7 +107,7 @@ OCT_mat3 iOCT_window_screenToWorld(iOCT_window window) {
     }
     iOCT_camera2D camera = *iOCT_camera2D_get(window.activeCameraSourceEntity);
     OCT_mat3 entityGlobalTransform = *iOCT_globalMatrix2D_getField(window.activeCameraSourceEntity);
-    // OCT_mat3 entityGlobalTransform = *(OCT_mat3*)eOCT_entity_getField(window.activeCameraSourceEntity, iOCT_renderer_inst.globalMatrix2DTicket);
+    // OCT_mat3 entityGlobalTransform = *(OCT_mat3*)eOCT_component_getField(window.activeCameraSourceEntity, iOCT_renderer_inst.globalMatrix2DTicket);
     OCT_vec2 windowRes = window.currentResolution;
 
     OCT_vec2 toCameraScale = { 1.0f / window.currentResolution.x, -1.0f / window.currentResolution.y }; // gets screen to 1x1

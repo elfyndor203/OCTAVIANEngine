@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 #include "registry/registry_int.h"
-#include "entityContext_int.h"
+#include "ECS/entityContexts/entityContexts_int.h"
 #include "events/events_int.h"
 
 // static OCT_index iOCT_ECS_addContextDataPool(eOCT_dataPoolDescription desc);

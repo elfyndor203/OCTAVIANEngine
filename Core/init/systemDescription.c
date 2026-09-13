@@ -1,7 +1,7 @@
 #include "OCT_Core_eng.h"
 
 #include "ECS/ECS_int.h"
-#include "ECs/entity_int.h"
+#include "../internal/ECS/entities/entities_int.h"
 
 void init_system_register_CORE() {
     eOCT_componentDescription entityMeta = {
