@@ -121,7 +121,7 @@ void system_init_RENDERER() {
 }
 
 void iOCT_renderer_contextSetup(OCT_global context) {
-    bool* screenSpace = &eOCT_single_getLocal(iOCT_renderer_inst.screenSpaceKey, context)->boolean;
+    bool* screenSpace = iOCT_screenSpace_get(context);
     *screenSpace = false;
 }
 
@@ -212,7 +212,7 @@ void iOCT_renderer_drawAll(OCT_global contextHandle) {
     // eOCT_pool* spritePool = eOCT_component_getPool(contextHandle, iOCT_renderer_inst.sprite2DKey);
     eOCT_pool* spritePool = iOCT_sprite2D_getPool(contextHandle);
     iOCT_sprite2D* spriteArray = (iOCT_sprite2D*)spritePool->array;
-    bool screenSpace = eOCT_single_getLocal(iOCT_renderer_inst.screenSpaceKey, contextHandle)->boolean;
+    bool screenSpace = *iOCT_screenSpace_get(contextHandle);
 
     assert(windowPool && windowArray && spritePool && spriteArray && "Renderer data grab failed\n");
 

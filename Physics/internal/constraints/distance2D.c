@@ -10,7 +10,8 @@
 OCT_local OCT_distance2D_constrain(OCT_local entityA, OCT_local entityB, OCT_vec2 anchorA, OCT_vec2 anchorB, float distance) {
     iOCT_physics2D_b2* physA = iOCT_physics2D_b2_get(entityA);
     iOCT_physics2D_b2* physB = iOCT_physics2D_b2_get(entityB);
-    b2WorldId worldID = *(b2WorldId*)eOCT_single_getLocal(iOCT_physicsSystem_inst.box2DWorldKey, entityA.contextHandle);
+    b2WorldId worldID = *iOCT_box2DWorldID_get(entityA.contextHandle);
+    // b2WorldId worldID = *(b2WorldId*)eOCT_single_getLocal(iOCT_physicsSystem_inst.box2DWorldKey, entityA.contextHandle);
 
     b2DistanceJointDef jointDef = b2DefaultDistanceJointDef();
     jointDef.bodyIdA = physA->b2dBodyID;
@@ -37,7 +38,7 @@ OCT_local OCT_distance2D_constrain(OCT_local entityA, OCT_local entityB, OCT_vec
 OCT_local OCT_rope2D_constrain(OCT_local entityA, OCT_local entityB, OCT_vec2 anchorA, OCT_vec2 anchorB, float length) {
     iOCT_physics2D_b2* physA = iOCT_physics2D_b2_get(entityA);
     iOCT_physics2D_b2* physB = iOCT_physics2D_b2_get(entityB);
-    b2WorldId worldID = *(b2WorldId*)eOCT_single_getLocal(iOCT_physicsSystem_inst.box2DWorldKey, entityA.contextHandle);
+    b2WorldId worldID = *iOCT_box2DWorldID_get(entityA.contextHandle);
 
     b2DistanceJointDef jointDef = b2DefaultDistanceJointDef();
     jointDef.bodyIdA = physA->b2dBodyID;

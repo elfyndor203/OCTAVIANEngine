@@ -42,6 +42,8 @@ struct iOCT_renderer {
 extern iOCT_renderer iOCT_renderer_inst;
 
 eOCT_DEFINE_COMPONENT_FIELD_ACCESSOR(iOCT_globalMatrix2D, OCT_mat3, iOCT_renderer_inst, globalMatrix2DTicket)
+eOCT_DEFINE_SINGLE_LOCAL(iOCT_screenSpace, bool, iOCT_renderer_inst.screenSpaceKey)
+
 void system_init_RENDERER();
 
 void iOCT_renderer_drawLayer();

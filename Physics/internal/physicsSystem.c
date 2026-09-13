@@ -37,7 +37,7 @@ void iOCT_physicsSystem_contextSetup(OCT_global context) {
     b2WorldDef worldDef = b2DefaultWorldDef();
     worldDef.gravity = iOCT_toB2Vec2(OCT_vec2_div(iOCT_physicsSystem_inst.worldGravity, iOCT_physicsSystem_inst.unitsPerB2Meter));
     b2WorldId worldID = b2CreateWorld(&worldDef);
-    b2WorldId* worldSingle = (b2WorldId*)eOCT_single_getLocal(iOCT_physicsSystem_inst.box2DWorldKey, context);
+    b2WorldId* worldSingle = iOCT_box2DWorldID_get(context);
     *worldSingle = worldID;
 
     // b2BodyDef groundBodyDef = b2DefaultBodyDef();
@@ -49,7 +49,7 @@ void iOCT_physicsSystem_contextSetup(OCT_global context) {
 }
 
 void eOCT_PHYSICS_update(OCT_global context) {
-    b2WorldId worldID = *(b2WorldId*)eOCT_single_getLocal(iOCT_physicsSystem_inst.box2DWorldKey, context);
+    b2WorldId worldID = *iOCT_box2DWorldID_get(context);
 
     b2World_Step(worldID, 1.0f / 60.0f, 4);
 

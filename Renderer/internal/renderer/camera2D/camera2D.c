@@ -46,6 +46,6 @@ void OCT_camera2D_zoomBy(OCT_local entity, float factor) {
 }
 
 void OCT_camera2D_makeContextScreenSpace(OCT_global context) {
-    bool* screenSpace = &eOCT_single_getLocal(iOCT_renderer_inst.screenSpaceKey, context)->boolean;
+    bool* screenSpace = iOCT_screenSpace_get(context);
     *screenSpace = true;
 }

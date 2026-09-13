@@ -15,7 +15,7 @@ void system_register_PLATFORM() {
         .name = "time",
         .providedField = time,
         .global = true,
-        .keyCacheLocation = &iOCT_platformSystem_inst.timeTicket
+        .keyCacheLocation = &iOCT_platformSystem_inst.timeKey
     };
     eOCT_fieldDescription deltaTime = {
         .name = "deltaFrameTime",
@@ -27,7 +27,7 @@ void system_register_PLATFORM() {
         .name = "deltaTime",
         .providedField = deltaTime,
         .global = true,
-        .keyCacheLocation = &iOCT_platformSystem_inst.deltaTimeTicket
+        .keyCacheLocation = &iOCT_platformSystem_inst.deltaTimeKey
     };
 
     eOCT_systemDescription platformSystem = {

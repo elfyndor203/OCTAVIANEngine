@@ -37,7 +37,7 @@ void OCT_physics2D_attachNew(OCT_local entity, float mass, bool dynamic) {
     float rotation = OCT_mat3_getRotation(transform);
     OCT_vec2 positionMeters = OCT_vec2_div(position, iOCT_physicsSystem_inst.unitsPerB2Meter);
 
-    b2WorldId worldID = *(b2WorldId*)eOCT_single_getLocal(iOCT_physicsSystem_inst.box2DWorldKey, entity.contextHandle);
+    b2WorldId worldID = *iOCT_box2DWorldID_get(entity.contextHandle);
 
     b2BodyDef newBodyDef = b2DefaultBodyDef();
     newBodyDef.position = (b2Vec2){positionMeters.x, positionMeters.y};

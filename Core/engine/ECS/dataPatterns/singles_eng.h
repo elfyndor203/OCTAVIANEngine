@@ -3,6 +3,16 @@
 #include "registry/registry_eng.h"
 #include "utilities/utilities_eng.h"
 
+#define eOCT_DEFINE_SINGLE_GLOBAL(singleName, typeName, singleKey) \
+    static inline typeName* singleName##_get() { \
+        return (typeName*)eOCT_single_getGlobal(singleKey); \
+    } \
+
+#define eOCT_DEFINE_SINGLE_LOCAL(singleName, typeName, singleKey) \
+    static inline typeName* singleName##_get(OCT_global contextHandle) { \
+        return (typeName*)eOCT_single_getLocal(singleKey, contextHandle); \
+    } \
+
 struct eOCT_singleDescription {
     const char* name;
     eOCT_fieldDescription providedField;
