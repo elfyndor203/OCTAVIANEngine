@@ -8,4 +8,3 @@ OCT_local eOCT_entity_getHandle(OCT_local context, OCT_ID entityID);
 OCT_global eOCT_entity_getContextHandle(OCT_local entity);
 bool eOCT_component_isAttached(OCT_local entity, eOCT_componentKey component, bool* enabledOut);
 bool eOCT_entity_isRoot(OCT_local entity);
-//OCT_handle eOCT_entity_genContextHandle(OCT_handle entity);

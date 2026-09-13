@@ -5,6 +5,7 @@
 #include "physics2D/physics2D.h"
 #include "physics2D/physics2D_int.h"
 #include "constraints/constraints_int.h"
+#include "collider2D/collider2D_int.h"
 
 #define iOCT_PHYSICS_CONSTRAINT_SOLVE_ITERATIONS_DEFAULT 10
 
@@ -31,6 +32,7 @@ void iOCT_physicsSystem_init() {
     iOCT_physicsSystem_inst.unitsPerB2Meter = 1;
 
     iOCT_physicsSystem_inst.constraintSolveIterations = iOCT_PHYSICS_CONSTRAINT_SOLVE_ITERATIONS_DEFAULT;
+    iOCT_physicsSystem_inst.handleCacheForB2UserData = eOCT_pool_open(iOCT_physicsSystem_inst.systemID, eOCT_POOL_CAPACITY_DEFAULT, sizeof(OCT_local));
 }
 
 void iOCT_physicsSystem_contextSetup(OCT_global context) {
@@ -68,6 +70,8 @@ void eOCT_PHYSICS_update(OCT_global context) {
         *position = OCT_vec2_mul((OCT_vec2){newPos.x, newPos.y}, iOCT_physicsSystem_inst.unitsPerB2Meter);
         *rotation = newRot;
     }
+
+    iOCT_collider2D_callWatches(context);
 }
 
 // void eOCT_PHYSICS_updateCustomLoop(OCT_global context) {

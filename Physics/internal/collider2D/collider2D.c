@@ -1,15 +1,16 @@
-#include "collider2D_int.h"
-#include "types_int.h"
+#include "collider2D/collider2D_int.h"
+#include "collider2D/collider2D.h"
+#include "constraints/types_int.h"
 
 #include <box2d/box2d.h>
 
 #include "physicsSystem_int.h"
-#include "../../../../cmake-build-debug/_deps/box2d-src/src/joint.h"
 #include "physics2D/physics2D_int.h"
 
 OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dimensions, OCT_vec2 origin, float radians, float density) {
     b2ShapeDef newShape = b2DefaultShapeDef();
     newShape.density = density; // not scaled
+    newShape.enableContactEvents = true;
 
     OCT_mat3 globalTransform = *iOCT_globalMatrix2D_getField(entity);
 
@@ -79,7 +80,9 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
         .dimensions = dimensions,
         .origin = origin,
         .rotation = radians,
-        .shape = shape
+        .shape = shape,
+        .watchCollision = false,
+        .callback = NULL
     };
     OCT_local colliderHandle = {
         .contextHandle = entity.contextHandle,
@@ -87,6 +90,19 @@ OCT_local OCT_collider2D_new(OCT_local entity, OCT_shapeType shape, OCT_vec2 dim
     };
 
     iOCT_collider2D_new(entity.contextHandle, &newCollider, &colliderHandle.objectID, NULL);
+    OCT_local* handleCache = eOCT_pool_addEntryNew(&iOCT_physicsSystem_inst.handleCacheForB2UserData, &colliderHandle, NULL);       // store the handle in a stable spot for accessing colliders later
+    b2Shape_SetUserData(newShapeID, handleCache);
+
     return colliderHandle;
+}
+
+void OCT_collider2D_watch(OCT_local colliderHandle, OCT_collider2D_collisionCallback callback) {
+    if (!callback) {
+        OCT_ERROR_LOG(OCT_EXIT_INVALID_ARGUMENT, "Callback is NULL");
+        return;
+    }
+    iOCT_collider2D* collider = iOCT_collider2D_get(colliderHandle.contextHandle, colliderHandle.objectID);
+    collider->watchCollision = true;
+    collider->callback = callback;
 }
 

@@ -11,6 +11,7 @@ struct iOCT_physicsSystem {
     eOCT_componentKey physics2DKey;
     eOCT_dataPoolKey distance2DKey;
     eOCT_dataPoolKey collider2DKey;
+    eOCT_dataPoolKey collisionWatchKey;
     eOCT_fieldTicket globalMatrix2DTicket;
     eOCT_fieldTicket position2DTicket;
     eOCT_fieldTicket rotationTicket;
@@ -23,6 +24,8 @@ struct iOCT_physicsSystem {
     OCT_index constraintSolveIterations;
 
     float unitsPerB2Meter;
+
+    eOCT_pool handleCacheForB2UserData;
 };
 
 extern iOCT_physicsSystem iOCT_physicsSystem_inst;
