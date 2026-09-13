@@ -3,6 +3,8 @@
 #include "registry/registry_eng.h"
 #include "utilities/utilities_eng.h"
 
+#define eOCT_END_EVENTS ((eOCT_eventDescription){.name = "EVENTS"})
+
 struct eOCT_eventDescription { // for cross module communication, but what about for the user __NOTE__
     const char* name;
     size_t stride;

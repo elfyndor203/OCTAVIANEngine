@@ -3,6 +3,8 @@
 #include "registry/registry_eng.h"
 #include "utilities/utilities_eng.h"
 
+#define eOCT_END_COMPONENTS ((eOCT_componentDescription){.name = "COMPONENT_DESCRIPTION_END"})
+
 #define eOCT_DEFINE_COMPONENT(componentName, componentKey)\
     static inline componentName* componentName##_get(OCT_local entityHandle) { \
         return (componentName*)eOCT_component_get(entityHandle, componentKey); \

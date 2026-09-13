@@ -2,8 +2,6 @@
 #include "types_eng.h"
 
 #include "layout/types.h"
-#include "registry/registry_eng.h"
-#include "registry/dataAccess_eng.h"
 
 OCT_index eOCT_component_getIndex(OCT_local entity, eOCT_componentKey component);
 OCT_local eOCT_entity_getHandle(OCT_local context, OCT_ID entityID);

@@ -3,6 +3,8 @@
 #include "registry/registry_eng.h"
 #include "utilities/utilities_eng.h"
 
+#define eOCT_END_SINGLES ((eOCT_singleDescription){.name = "SINGLE_DESCRIPTION_END"})
+
 #define eOCT_DEFINE_SINGLE_GLOBAL(singleName, typeName, singleKey) \
     static inline typeName* singleName##_get() { \
         return (typeName*)eOCT_single_getGlobal(singleKey); \

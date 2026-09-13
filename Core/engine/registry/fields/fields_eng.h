@@ -5,6 +5,9 @@
 #include "layout/types.h"
 #include "utilities/utilities_eng.h"
 
+#define eOCT_END_FIELDS ((eOCT_fieldDescription){.name = "FIELD_DESCRIPTION_END"})
+#define eOCT_END_REQUESTS ((eOCT_fieldRequest){.name = "FIELD_REQUEST_END"})
+
 struct eOCT_fieldDescription {
     const char* name;
     eOCT_dataTypes type;	// standard field types defined in fields.h

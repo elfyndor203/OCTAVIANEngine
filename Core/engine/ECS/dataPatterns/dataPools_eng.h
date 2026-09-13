@@ -3,6 +3,8 @@
 #include "registry/registry_eng.h"
 #include "utilities/utilities_eng.h"
 
+#define eOCT_END_DATAPOOLS ((eOCT_dataPoolDescription){.name = "DATAPOOL_DESCRIPTION_END"})
+
 #define eOCT_DEFINE_DATAPOOL_GLOBAL(dataName, dataPoolKey) \
     static inline eOCT_mappedPool* dataName##_getPool() { \
         return eOCT_dataPool_getGlobal(dataPoolKey); \
