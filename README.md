@@ -1,5 +1,5 @@
 # OCTAVIAN (OUTDATED README)
-OCTAVIAN is a WIP 2D game engine written in C. It uses a handle-based ECS-esque system, instanced rendering using OpenGL, and is designed to be modular. It has minimal dependencies: OpenGL using GLAD, GLFW, and stb_image. 
+OCTAVIAN is a WIP 2D game engine written in C. It uses a highly modular handle-based ECS design, allowing the engine to be easily customized or overhauled. The default modules use: GLFW/OpenGL for windowing/rendering, Box2D for physics.
 
 Currently working on: Physics
 
@@ -10,12 +10,12 @@ A simple example game is in zGameTest.
 - GLAD
 - GLFW
 - stb_image
+- Box2D 3.1.0
 
 ## Installation (WIP)
 1. Use Windows x64
 2. Clone the repo
-3. Open in Visual Studio
-4. Set the game project (e.g. zGameTest) as startup, build, and run
+
 
 ## Getting started
 - Init params: Name, resolution X, Y, background color, virtual resolution X, Y, max FPS, ECS tick rate, physics tick rate
