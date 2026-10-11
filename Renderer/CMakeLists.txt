@@ -18,6 +18,10 @@ add_library(Renderer STATIC
         include/window/inputs.h
 )
 
+target_compile_definitions(Renderer PRIVATE
+        iOCT_RENDERER_DEFAULT_SHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/internal/renderer/shader"
+)
+
 target_include_directories(Renderer
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include

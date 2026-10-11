@@ -102,8 +102,10 @@ void system_init_RENDERER() {
 
 #pragma region shaders
     GLuint spriteShader = iOCT_shader_createProgram(
-        "OCTAVIANEngine/Renderer/internal/renderer/shader/sprite/sprite.vert",
-        "OCTAVIANEngine/Renderer/internal/renderer/shader/sprite/sprite.frag");
+        // "OCTAVIANEngine/Renderer/internal/renderer/shader/sprite/sprite.vert",
+        // "OCTAVIANEngine/Renderer/internal/renderer/shader/sprite/sprite.frag");
+        iOCT_RENDERER_DEFAULT_SHADER_DIR"/sprite/sprite.vert",
+        iOCT_RENDERER_DEFAULT_SHADER_DIR"/sprite/sprite.frag");
     glUseProgram(spriteShader);
     glUniform1i(glGetUniformLocation(spriteShader, "spriteTexArray"), 0); // read from texture slot 0
     GLint cameraUniform = glGetUniformLocation(spriteShader, "cameraProj");
