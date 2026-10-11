@@ -87,6 +87,9 @@ target_include_directories(Core
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/internal
 )
+target_compile_definitions(Core PUBLIC
+    eOCT_OCTAVIANENGINE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/.."
+)
 
 set_target_properties(Core PROPERTIES
     C_STANDARD 11

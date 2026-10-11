@@ -104,8 +104,8 @@ void system_init_RENDERER() {
     GLuint spriteShader = iOCT_shader_createProgram(
         // "OCTAVIANEngine/Renderer/internal/renderer/shader/sprite/sprite.vert",
         // "OCTAVIANEngine/Renderer/internal/renderer/shader/sprite/sprite.frag");
-        iOCT_RENDERER_DEFAULT_SHADER_DIR"/sprite/sprite.vert",
-        iOCT_RENDERER_DEFAULT_SHADER_DIR"/sprite/sprite.frag");
+        iOCT_RENDERER_DIR"/internal/renderer/shader/sprite/sprite.vert",
+        iOCT_RENDERER_DIR"/internal/renderer/shader/sprite/sprite.frag");
     glUseProgram(spriteShader);
     glUniform1i(glGetUniformLocation(spriteShader, "spriteTexArray"), 0); // read from texture slot 0
     GLint cameraUniform = glGetUniformLocation(spriteShader, "cameraProj");
@@ -336,7 +336,7 @@ static void iOCT_setInstanceOffset(GLuint VAO, GLuint VBO, size_t byteOffset) {
 
 static OCT_global iOCT_initGizmoTex() {
     OCT_global systemTexGroup = OCT_textureGroup_open(iOCT_SYSTEMTEX_DIMENSIONS, 1);
-    OCT_global gizmoTex = OCT_texture_new(systemTexGroup, "../OCTAVIAN/OCTAVIANEngine/Renderer/resources/frameGizmo.png"); // __NOTE__ CHANGE PATH METHOD
+    OCT_global gizmoTex = OCT_texture_new(systemTexGroup, iOCT_RENDERER_DIR"/resources/frameGizmo.png"); // __NOTE__ CHANGE PATH METHOD
     return gizmoTex;
 }
 
